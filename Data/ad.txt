@@ -1,0 +1,225 @@
+﻿Expanding base 'CN=Hamann\, Jens,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net'...
+Result <0>: (null)
+Matched DNs: 
+Getting 1 entries:
+>> Dn: CN=Hamann\, Jens,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net
+	4> objectClass: top; person; organizationalPerson; user; 
+	1> cn: Hamann, Jens; 
+	1> sn: Hamann; 
+	1> c: DE; 
+	1> l: Erfurt; 
+	1> title: Externer Service Desk-Überlauf; 
+	1> description: WI - IT - SD (Externer SD Fa. ComputaCenter Erfurt - Anspr.Partner Püll, Otto); 
+	1> postalCode: 99099; 
+	1> physicalDeliveryOfficeName: Erfurt; 
+	1> telephoneNumber: +49 6221 481 225; 
+	2> userCertificate: <ldp: Binary blob>; <ldp: Binary blob>; 
+	1> givenName: Jens; 
+	1> distinguishedName: CN=Hamann\, Jens,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> instanceType: 4; 
+	1> whenCreated: 11/27/2007 11:4:43 W. Europe Standard Time W. Europe Daylight Time; 
+	1> whenChanged: 6/25/2009 7:14:21 W. Europe Standard Time W. Europe Daylight Time; 
+	1> displayName: Hamann, Jens; 
+	1> uSNCreated: 3899337; 
+	1> securityProtocol: ; 
+	27> memberOf: CN=GRP User PKI,OU=Groups,OU=AD Management,OU=Hanson-America,OU=HNS,DC=grouphc,DC=net; CN=EUR Disable Proxy Settings testing users,OU=Groups,OU=AD,OU=SD Technical Services,OU=SDO,DC=grouphc,DC=net; CN=Websense GER Group Membership Admins,OU=Content Filtering,OU=Groups,OU=SEC,OU=GTS,DC=grouphc,DC=net; CN=GER Normal Internet Users,OU=Content Filtering,OU=Groups,OU=SEC,OU=GTS,DC=grouphc,DC=net; CN=GER TS DRV T GERSAHEID110,OU=GER Heidelberg IT TS Groups DRV,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER SMS Users,OU=GER Heidelberg IT Groups,OU=GER _Admin Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER MBX LESS THEN 200MB,OU=SDO Messaging Service Messaging Groups,OU=SDO Messaging Service Messaging,OU=SDO Messaging Service,OU=SDO Services,OU=SDO,DC=grouphc,DC=net; CN=GER ComputaCenter Admins,OU=GER _Admin Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER SD CC,OU=GER HeidelbergCement AG Groups,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS ADM Remote Desktop Users,OU=GER Heidelberg IT TS Groups ADM,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER Heidelberg IT Users,OU=GER _Admin SiteGroups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER Heidelberg IT WSAdmins,OU=GER Heidelberg IT Groups,OU=GER _Admin Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GRP SMS GER Service Desk,OU=GRP SMS Service Desks,OU=GRP SMS Groups,OU=GRP SMS,OU=GRP,DC=grouphc,DC=net; CN=GER TS ADM Shadowing,OU=GER Heidelberg IT TS Groups ADM,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=HZAG-HV\\Everyone,OU=GER Heidelberg IT Exchange Groups,OU=GER _Admin Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS App InternetExplorer S,OU=GER Heidelberg IT TS Groups APP,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER Hauptverwaltung WSAdmins,OU=GER Hauptverwaltung Groups,OU=GER _Admin Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=group...
+	1> deletedItemFlags: 0; 
+	1> uSNChanged: 83562471; 
+	1> co: Germany; 
+	1> department: Computacenter Managed Services GmbH Erfurt; 
+	1> company: HeidelbergCement AG; 
+	1> homeMTA: CN=Microsoft MTA,CN=GERSEHEID999,CN=Servers,CN=CEU - Germany,CN=Administrative Groups,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; 
+	4> proxyAddresses: X500:/o=HGM/ou=First Administrative Group/cn=Recipients/cn=jens.hamann.heidelbergcement.com; X400:c=DE;a= ;p=GEMS;o=CEU - Germany;s=Hamann;g=Jens;; SMTP:Jens.Hamann@heidelbergcement.com; MRS:Jens.Hamann@heidelberg.gems.mrs; 
+	1> extensionData: <ldp: Binary blob>; 
+	1> homeMDB: CN=GER H sites H-I SLA Store,CN=SG1 National,CN=InformationStore,CN=GERSEHEID999,CN=Servers,CN=CEU - Germany,CN=Administrative Groups,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; 
+	1> mDBStorageQuota: 200000; 
+	1> mDBOverQuotaLimit: 250000; 
+	1> publicDelegatesBL: CN=Service Desk CC,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> garbageCollPeriod: 0; 
+	1> mDBUseDefaults: FALSE; 
+	1> mailNickname: JHamann; 
+	1> replicatedObjectVersion: 0; 
+	1> name: Hamann, Jens; 
+	1> objectGUID: 616d1c23-8e10-4fd7-8e74-1deea28f86b3; 
+	1> userAccountControl: 0x200; 
+	1> badPwdCount: 0; 
+	1> codePage: 0; 
+	1> countryCode: 276; 
+	1> badPasswordTime: 6/10/2009 16:5:51 W. Europe Standard Time W. Europe Daylight Time; 
+	1> lastLogoff: 0; 
+	1> lastLogon: 10/20/2008 10:58:33 W. Europe Standard Time W. Europe Daylight Time; 
+	1> scriptPath: GER\GERLogon.exe; 
+	1> logonHours: <ldp: Binary blob>; 
+	1> pwdLastSet: 6/15/2009 13:35:31 W. Europe Standard Time W. Europe Daylight Time; 
+	1> primaryGroupID: 513; 
+	1> userParameters: <ldp: Binary blob>; 
+	1> objectSid: S-1-5-21-1078081533-261478967-839522115-169268; 
+	1> accountExpires: 0; 
+	1> logonCount: 18; 
+	1> sAMAccountName: JHamann; 
+	1> sAMAccountType: 805306368; 
+	2> showInAddressBook: CN=Default Global Address List,CN=All Global Address Lists,CN=Address Lists Container,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; CN=All Users,CN=All Address Lists,CN=Address Lists Container,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; 
+	1> legacyExchangeDN: /o=GEMS/ou=CEU - Germany/cn=Recipients/cn=JHamann; 
+	1> userPrincipalName: JHamann@grouphc.net; 
+	1> lockoutTime: 0; 
+	1> objectCategory: CN=Person,CN=Schema,CN=Configuration,DC=hz-group,DC=com; 
+	5> dSCorePropagationData: 5/20/2009 8:52:6 W. Europe Standard Time W. Europe Daylight Time; 3/9/2009 16:55:24 W. Europe Standard Time W. Europe Daylight Time; 11/14/2008 17:54:48 W. Europe Standard Time W. Europe Daylight Time; 10/20/2008 11:11:54 W. Europe Standard Time W. Europe Daylight Time; 7/15/1601 0:36:49 W. Europe Standard Time W. Europe Daylight Time; 
+	1> lastLogonTimestamp: 6/25/2009 7:4:23 W. Europe Standard Time W. Europe Daylight Time; 
+	1> textEncodedORAddress: c=DE;a= ;p=GEMS;o=CEU - Germany;s=Hamann;g=Jens;; 
+	1> mail: Jens.Hamann@heidelbergcement.com; 
+	1> manager: CN=Heidler\, Christoph,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> msExchHomeServerName: /o=GEMS/ou=CEU - Germany/cn=Configuration/cn=Servers/cn=GERSEHEID999; 
+	1> replicationSignature: <ldp: Binary blob>; 
+	1> msExchALObjectVersion: 58; 
+	4> msExchADCGlobalNames: EX5:cn=JHamann,cn=Recipients,ou=CEU - Germany,o=GEMS:organizationalperson$person$top0000000023AEB774158AC801; FOREST:65D7B0AA90C9AE4F8AC44A3B3060E29100000000AB14D257FC89C801; forest:o=GEMS0000000023AEB774158AC801; NT5:231C6D61108ED74F8E741DEEA28F86B300000000AB14D257FC89C801; 
+	1> msExchMailboxSecurityDescriptor: <ldp: Binary blob>; 
+	1> msExchUserAccountControl: 0; 
+	1> msExchMailboxGuid: <ldp: Binary blob>; 
+	1> dLMemDefault: 1; 
+	1> msExchPoliciesIncluded: {D6EF34AC-BEB4-496A-B129-40A1888559D5},{26491CFC-9E50-4857-861B-0CB8DF22B5D7}; 
+	1> msRTCSIP-PrimaryUserAddress: sip:Jens.Hamann@heidelbergcement.com; 
+	1> msRTCSIP-UserEnabled: TRUE; 
+	1> msRTCSIP-PrimaryHomeServer: CN=LC Services,CN=Microsoft,CN=GRPSAMOKR009,CN=Pools,CN=RTC Service,CN=Microsoft,CN=System,DC=hz-group,DC=com; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Expanding base 'CN=Palm\, Frank,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net'...
+Result <0>: (null)
+Matched DNs: 
+Getting 1 entries:
+>> Dn: CN=Palm\, Frank,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net
+	4> objectClass: top; person; organizationalPerson; user; 
+	1> cn: Palm, Frank; 
+	1> sn: Palm; 
+	1> c: DE; 
+	1> l: Heidelberg; 
+	1> description: GER TSfA; 
+	1> postalCode: 69120; 
+	1> physicalDeliveryOfficeName: Wilckensstrasse Raum 1.08; 
+	1> telephoneNumber: +49 6221 481 762; 
+	1> facsimileTelephoneNumber: 11762; 
+	1> givenName: Frank; 
+	1> initials: FPa; 
+	1> distinguishedName: CN=Palm\, Frank,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> instanceType: 4; 
+	1> whenCreated: 10/5/2004 8:6:54 W. Europe Standard Time W. Europe Daylight Time; 
+	1> whenChanged: 7/30/2009 1:3:46 W. Europe Standard Time W. Europe Daylight Time; 
+	1> displayName: Palm, Frank; 
+	1> otherTelephone:  ; 
+	1> uSNCreated: 124171; 
+	1> telephoneAssistant:  ; 
+	1> info:  ; 
+	1> securityProtocol: ; 
+	119> memberOf: CN=GRP Pilot User PKI,OU=Groups,OU=AD Management,OU=Hanson-America,OU=HNS,DC=grouphc,DC=net; CN=GER TS APP BI SDE S,OU=GER Heidelberg IT TS Groups APP,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GRP User PKI,OU=Groups,OU=AD Management,OU=Hanson-America,OU=HNS,DC=grouphc,DC=net; CN=GER TS APP Methodware Test S,OU=GER Heidelberg IT TS Groups APP,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS APP BI Support S,OU=GER Heidelberg IT TS Groups APP,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS APP BI Testing S,OU=GER Heidelberg IT TS Groups APP,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER on-call service,OU=GER Heidelberg IT Groups,OU=GER _Admin Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER Wilckensstr. 1a,OU=GER HeidelbergCement AG Groups,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER WSAdmin GERCLHEID067,OU=GER WSAdmins,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=EUR Disable Proxy Settings testing users,OU=Groups,OU=AD,OU=SD Technical Services,OU=SDO,DC=grouphc,DC=net; CN=GER PRT GERPRHEID055,OU=GER LogonGroups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER HeadQuarter HD,OU=GER LogonGroups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER Normal Internet Users,OU=Content Filtering,OU=Groups,OU=SEC,OU=GTS,DC=grouphc,DC=net; CN=GER TS APP SQL 2005 Management Studio S,OU=GER Heidelberg IT TS Groups APP,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS ADM Shadowing Desktop,OU=GER Heidelberg IT TS Groups ADM,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS Desktop Navision Job Services,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS DRV T GERSAHEID110,OU=GER Heidelberg IT TS Groups DRV,OU=GER Heidelberg IT TS Groups,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=GER TS APP BI Mode...
+	1> deletedItemFlags: 0; 
+	1> uSNChanged: 89240114; 
+	1> co: Germany; 
+	1> department: HV - GIT; 
+	1> company: HeidelbergCement AG; 
+	1> homeMTA: CN=Microsoft MTA,CN=GERSEHEID999,CN=Servers,CN=CEU - Germany,CN=Administrative Groups,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; 
+	1> deliverAndRedirect: FALSE; 
+	7> proxyAddresses: X500:/o=HGM/ou=First Administrative Group/cn=Recipients/cn=Palm, Frank; X400:c=DE;a= ;p=GEMS;o=CEU - Germany;s=Frank;g=Palm;; x400:c=DE;a= ;p=GEMS;o=HEIDELBERG;s=Palm;g=Frank;i=FP;; sip:Frank.Palm@heidelbergcement.com; X500:/o=GEMS/ou=HEIDELBERG/cn=Recipients/cn=Palm; SMTP:Frank.Palm@heidelbergcement.com; MRS:Frank.Palm@HEIDELBERG.GEMS.mrs; 
+	3> extensionData: <ldp: Binary blob>; <ldp: Binary blob>; <ldp: Binary blob>; 
+	1> publicDelegates: CN=Rieth\, Nadine,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> homeMDB: CN=GER H sites L-P SLA Store,CN=SG2 National,CN=InformationStore,CN=GERSEHEID999,CN=Servers,CN=CEU - Germany,CN=Administrative Groups,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; 
+	1> streetAddress: Wilckensstr. 1a; 
+	1> mDBStorageQuota: 200000; 
+	1> mDBOverQuotaLimit: 250000; 
+	1> otherHomePhone:  ; 
+	1> autoReplyMessage: /; 
+	3> publicDelegatesBL: CN=ger.staging@heidelbergcement.com,CN=Microsoft Exchange System Objects,DC=grouphc,DC=net; CN=sso4sapbi@heidelbergcement.com,CN=Microsoft Exchange System Objects,DC=grouphc,DC=net; CN=Werner\, Steffen,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> garbageCollPeriod: 0; 
+	1> mDBUseDefaults: FALSE; 
+	1> mAPIRecipient: TRUE; 
+	3> directReports: CN=Hauke\, Josef,OU=Extern,OU=GER _Admin External Token Users,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=Priesing\, Achim,OU=Extern,OU=GER _Admin External Token Users,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; CN=Palm\, Frank ADM,OU=GER Admin Accounts,OU=GER _Admin,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> msExchAssistantName:  ; 
+	1> mailNickname: Frank.Palm; 
+	1> replicatedObjectVersion: 0; 
+	1> employeeNumber: 001001000758962; 
+	1> name: Palm, Frank; 
+	1> objectGUID: b0b745f0-a2aa-412d-b535-723bed5fbca7; 
+	1> userAccountControl: 0x200; 
+	1> badPwdCount: 0; 
+	1> codePage: 0; 
+	1> countryCode: 276; 
+	1> employeeID: 276000000010696; 
+	1> homeDirectory: \\dehvkf01\PalmF$; 
+	1> homeDrive: K:; 
+	1> badPasswordTime: 8/4/2009 15:59:33 W. Europe Standard Time W. Europe Daylight Time; 
+	1> lastLogoff: 0; 
+	1> lastLogon: 7/27/2009 7:49:58 W. Europe Standard Time W. Europe Daylight Time; 
+	1> pwdLastSet: 7/14/2009 11:19:21 W. Europe Standard Time W. Europe Daylight Time; 
+	1> primaryGroupID: 513; 
+	1> userParameters: <ldp: Binary blob>; 
+	1> objectSid: S-1-5-21-1078081533-261478967-839522115-34780; 
+	1> adminCount: 1; 
+	1> comment: uagLavu/mJ02Bz5UG1428gn1m8T9Ha6vmvb/LiFa5EtrYF8lyZ0Ka2UN5r8eUxCdHWdQugZFYOV+b1TXvNB7A2b+bLWZkXn4hXtf6PVw2RZBLy2AioUcwaZJ8f/aFwUKCCBlWCM6cELc3atipexS7fz6Yr4VDL+3R9FJxnv+PwJVN4HpnoykVB4IO3NZ84y2NrLmaGuZNb4Iibrw4kpsUXtPUk43Y8J51hSD3h0L7dyOQFhH9QDP/7zFIEarFT5xfqacr6c7t5ip6drlqu8hGZZ381NGvEcoiEfY2pZh2qY19Yw8z/C9/6jTNZt9FDEefhCY7npq54D1+/0zP48GQ9Jgi6QAeut+USZpRh+r3QwzbAtTtaWVng+XDi6Qd7b4UaC+sz2H2qlvPrYPhJnhTUb7SEaJMRsRuTP897gNlOnJKO33yLAnfWvzRZDvINFPCTjNPDBtKj8WdeUONgr72kl/tPslRSV3NBJI/VyADkxKOcNA/XFAcF5Kj0hjyImxVYmwKd/aO5+kWA0gnDej/cuMK13peziJRnOFoY4q490PN7y5Or4HKzpQrUyggwv/6WBxxayqR7QvEMJs4OZaSDmGVnDs6o3/omRKatP9v0jbBKnyBS7uecRaVBDFToUQB4yFNTkLzZe0W3O1e/cn2uyRYIJMbcZUfBVfxhzwdOWQXVkEbHaQherbrdHkPAI6JH3tzquA6GFXv0rvS9kHjkcrOK8TBn9MZz4UEEc4c+pFlxlXLezOoO1C5a5sh04Jzr1mxrYO4XiHaavrKlKf2UZObhivvqWWWxjmEyC6kmp+QK/wN6TdZOC1ClrsMHRTIcQjgS443jQOEh3TpoV0PWBCFSspM5ZyrSHnDvCBKvf7g4KloNp/N/+heePoFJWekHJN4SNOLS+gDIvs2aEBPzT3Z/1zRMBUyPz8jlmjPOcfFOHTHxYsmbel2mRZkCNjZZhL+a3JUUmPovfDChD6g7s1/9csWsaO++FUKUdiDZsQYeip/4j7yhPcipTUWClibNNQxTBDbrpzHpBFcRalSwejOC5MzBTJlI90A2QGmJUSSrLYnjgkBBXVXKAuuiCUB4tTrMYkOqRYO2mgIpe7gteu/8hf1+YRDtiRdfRK59rcbK0BTdpsHZS4J5hRHlKkpaOjOKsu14Q9i8bI; 
+	1> accountExpires: 65535/6/65535 14:0:64440 UNC; 
+	1> logonCount: 25; 
+	1> sAMAccountName: PalmF; 
+	1> sAMAccountType: 805306368; 
+	2> showInAddressBook: CN=All Users,CN=All Address Lists,CN=Address Lists Container,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; CN=Default Global Address List,CN=All Global Address Lists,CN=Address Lists Container,CN=GEMS,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=hz-group,DC=com; 
+	1> legacyExchangeDN: /o=GEMS/ou=CEU - Germany/cn=Recipients/cn=PalmF; 
+	1> userPrincipalName: PalmF@grouphc.net; 
+	1> lockoutTime: 0; 
+	1> objectCategory: CN=Person,CN=Schema,CN=Configuration,DC=hz-group,DC=com; 
+	5> dSCorePropagationData: 5/20/2009 8:52:6 W. Europe Standard Time W. Europe Daylight Time; 3/9/2009 16:55:24 W. Europe Standard Time W. Europe Daylight Time; 11/14/2008 17:54:50 W. Europe Standard Time W. Europe Daylight Time; 10/20/2008 11:11:55 W. Europe Standard Time W. Europe Daylight Time; 7/15/1601 0:36:49 W. Europe Standard Time W. Europe Daylight Time; 
+	1> lastLogonTimestamp: 7/30/2009 0:53:21 W. Europe Standard Time W. Europe Daylight Time; 
+	1> textEncodedORAddress: c=DE;a= ;p=GEMS;o=CEU - Germany;s=Frank;g=Palm;; 
+	1> mail: frank.palm@heidelbergcement.com; 
+	1> manager: CN=Puell\, Otto,OU=GER HeidelbergCement AG Users,OU=GER HeidelbergCement AG,OU=GER,OU=EUR,DC=grouphc,DC=net; 
+	1> mobile: +49 172 6272701; 
+	1> pager:  ; 
+	1> msExchHomeServerName: /o=GEMS/ou=CEU - Germany/cn=Configuration/cn=Servers/cn=GERSEHEID999; 
+	1> replicationSignature: <ldp: Binary blob>; 
+	1> msExchALObjectVersion: 3324; 
+	5> msExchADCGlobalNames: EX5:cn=PalmF,cn=Recipients,ou=CEU - Germany,o=GEMS:organizationalperson$person$top0000000049D68A117A7DC801; NT5:F045B7B0AAA22D41B535723BED5FBCA700000000D718B87A697DC801; FOREST:65D7B0AA90C9AE4F8AC44A3B3060E29100000000D718B87A697DC801; forest:o=GEMS0000000049D68A117A7DC801; EX5:cn=Palm,cn=Recipients,ou=HEIDELBERG,o=GEMS:organizationalperson$person$top020000006D74C489ABB2C501; 
+	1> msExchHideFromAddressLists: FALSE; 
+	1> msExchMailboxSecurityDescriptor: <ldp: Binary blob>; 
+	1> msExchUserAccountControl: 0; 
+	1> msExchMailboxGuid: <ldp: Binary blob>; 
+	1> dLMemDefault: 1; 
+	1> msExchPoliciesExcluded: {26491CFC-9E50-4857-861B-0CB8DF22B5D7}; 
+	1> msRTCSIP-PrimaryUserAddress: sip:Frank.Palm@heidelbergcement.com; 
+	1> msRTCSIP-UserEnabled: TRUE; 
+	1> msRTCSIP-IsMaster: TRUE; 
+	1> msRTCSIP-PrimaryHomeServer: CN=LC Services,CN=Microsoft,CN=GRPSAMOKR009,CN=Pools,CN=RTC Service,CN=Microsoft,CN=System,DC=hz-group,DC=com; 
+-----------
