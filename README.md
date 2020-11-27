@@ -1,1 +1,14 @@
 # IT-Helpdesk-Console
+
+## About IT-Helpdesk-Console
+Several years ago I wrote a tool with a GUI which should make my work easier.
+
+By querying the PC name, all the information I need is displayed and can then call up a few other tools.
+![Review](https://github.com/Oclaton/IT-Helpdesk-Console/blob/main/2020-11-27%2022_07_55-ctx%20-%2010.1.5.135%20-%20Remotedesktopverbindung.png)
+
+
+At the time, I only knew a little VB and HTML.
+
+Now my idea is to rewrite the tool.
+
+I have already written my first approaches as a WPF application and Powershell.
