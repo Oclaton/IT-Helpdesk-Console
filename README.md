@@ -10,7 +10,11 @@ By querying the PC name, all the information I need is displayed and can then ca
 
 
 At the time, I only knew a little VB and HTML.
+Just look at in the original folder.
 
+During the inspection I noticed that many server addresses are hard coded in different places. In retrospect, my stupidity annoys me.
+
+## Intention
 Now my idea is to rewrite the tool.
 
 I have already written my first approaches as a WPF application and Powershell.
