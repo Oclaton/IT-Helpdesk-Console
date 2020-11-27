@@ -1,0 +1,99 @@
+<head>
+<title>Show Scope</title>
+<HTA:APPLICATION
+     APPLICATIONNAME="Show Scope"
+     SCROLL="yes"
+     SINGLEINSTANCE="yes"
+>
+</head>
+<script language="VBScript">
+'***********************************************************************************************************************************
+'Deklaration von Konstanten
+'***********************************************************************************************************************************
+Const conDom = "dc=DOMAIN,dc=intra"
+Const HK_CR = &H80000000 ' Classes Root
+Const HK_CU = &H80000001 ' Current User
+Const HK_LM = &H80000002 ' Local Machine
+Const HK_U  = &H80000003 ' Users
+Const HK_CC = &H80000004 ' Current Config
+'***********************************************************************************************************************************
+'Deklaration von Übergreifenden Variablen
+'***********************************************************************************************************************************
+Dim objShell
+Set objShell = CreateObject("Wscript.Shell")
+Dim objApp
+Set objApp = CreateObject("Shell.Application")
+strPath = objShell.CurrentDirectory
+Dim objFS
+Set objFS = CreateObject("Scripting.FilesystemObject")
+Dim strPath		' Programpfad
+Dim strServer
+Dim strSubnet
+'***********************************************************************************************************************************
+'Autostart
+'***********************************************************************************************************************************
+Sub Window_onLoad
+    window.resizeTo 800,600
+End Sub
+'***********************************************************************************************************************************
+' Lokale Routinen
+'***********************************************************************************************************************************
+'
+'CMD ausführen
+'
+Sub SubCmd
+  objShell.Run("%comspec% /k")
+End Sub
+'
+'Notepad starten
+'
+Sub SubNotepad
+    Const NORMAL_WINDOW = 1
+    objApp.ShellExecute "notepad.exe", , , , NORMAL_WINDOW
+End Sub
+'***********************************************************************************************************************************
+' Scope auslesen
+'***********************************************************************************************************************************
+Sub SubReadScope
+  Dim objScope, strLine, ArrayLine(5), strTemp
+  strServer = oServer.Value
+  strSubnet = oSubnet.Value
+  Set objScope = objShell.Exec("NETSH DHCP SERVER \\" & strServer & " SCOPE " & strSubnet & " SHOW CLIENTS 1")
+  strHTML = "<table border=1>"
+  For i = 1 to 7
+    objScope.StdOut.ReadLine
+  Next
+  Do While not objScope.StdOut.AtEndOfStream
+    strLine = objScope.StdOut.ReadLine
+	ArrayLine(0) = trim(mid(strLine,  1, 15))
+    ArrayLine(1) = trim(mid(strLine, 19, 15))
+	ArrayLine(2) = trim(mid(strLine, 35, 18))
+	ArrayLine(3) = trim(mid(strLine, 57, 20))
+	ArrayLine(4) = trim(mid(strLine, 78,  5))
+	ArrayLine(5) = trim(mid(strLine, 83, 20))
+	If InStr(strLine, "Anzahl") Then Exit Do
+	strHTML = strHTML & "<tr><td>" & ArrayLine(0) & "<td>" & ArrayLine(1) & "<td>" & ArrayLine(2) & "<td>" & ArrayLine(3) & "<td>" & ArrayLine(4)& "<td>" & ArrayLine(5)& "</tr>"
+  Loop
+  strHTML = strHTML & "</table>"
+  DataArea.InnerHTML = strHTML
+End Sub
+</script>
+
+<body bgcolor="#FFF0B0">
+<H2><center>Show Scope</center></H2>
+<script language="VBScript">document.write date()</script>
+<HR NOSHADE SIZE=1>
+<table border="0" width="100%">
+	<tr><td>Server:<td><input type="text" size="20" name="oServer" value="gerdcheid002">
+	<tr><td>Subnet:<td><input type="text" size="20" name="oSubnet" value="255.255.255.192">
+	<input type="button" style="width=120px" value="Scope Auslesen" name="SubReadScope" onClick="SubReadScope">
+</table>
+
+<HR NOSHADE SIZE=1>
+<span id = "DataArea">Informationsbereich</span>
+<HR NOSHADE SIZE=1>
+<input type="button" style="width=120px" value="Ende" name="Ende_button" accesskey="e" onClick="Window.Close">
+<input type="button" style="width=120px" value="Notepad" name="Notepad_button" onClick="SubNotepad">
+<input type="button" style="width=120px" value="CMD" name="CMD_button" onClick="SubCmd">
+
+</body>

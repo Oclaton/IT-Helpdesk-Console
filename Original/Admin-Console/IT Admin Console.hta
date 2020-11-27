@@ -1,0 +1,1853 @@
+<html>
+<head>
+
+<title>IT Admin Console</title>
+<HTA:APPLICATION
+    APPLICATIONNAME="IT Admin Console"
+    SINGLEINSTANCE="no"
+	ICON="Data\pic\logo.ico"
+	id="htaapp"
+ 	caption="yes"
+ 	contextmenu="yes"
+ 	maximizebutton="yes"
+ 	minimizebutton="yes"
+ 	navigable="yes"
+ 	scroll="yes"
+ 	scrollflat="yes"
+ 	selection="yes"
+ 	showintaskbar="yes"
+ 	sysmenu="yes"
+ 	version="3.0"
+ 	windowstate="maximize"
+>
+
+</head>
+<script language="VBScript">
+Const HKCR = &H80000000 ' Classes Root
+Const HKCU = &H80000001 ' Current User
+Const HKLM = &H80000002 ' Local Machine
+Const HKU  = &H80000003 ' Users
+Const HKCC = &H80000004 ' Current Config
+Const ADS_UF_PASSWORD_EXPIRED = &h800000
+
+'Deklaration von Übergreifenden Variablen
+Dim strPath	'Programpfad
+Dim strCNU	'AD-Connector-User
+Dim strCNC	'AD-Connector-Computer
+Dim strSIDU	'SID-User
+Dim strComputerOU
+Dim fso, objRegistry, sNetPath
+Dim ini, line, file, lRC
+Dim section, strValue, subkey, arrSubKeys
+Dim WLPDIP, LANSpeed
+Dim passList
+'Dim strNamespace, strUser, strPassword
+
+
+'Autostart
+Sub Window_onLoad
+    window.resizeTo 1200,768
+    Set objShell = CreateObject("Wscript.Shell")
+    strPath = objShell.CurrentDirectory
+    DataArea.InnerHTML = strHTML
+End Sub
+
+Sub Refresh
+    Location.Reload(True)
+End Sub
+
+Sub Window_Onload
+    Set objADSysInfo = CreateObject("ADSystemInfo")
+    Set objManager = GetObject("LDAP://" & objADSysInfo.Username)
+    span_manager.InnerHTML = "Hello Admin : " & objManager.DisplayName
+End Sub
+'***********************************************************************************************************************************
+'Script Routinen
+'***********************************************************************************************************************************
+Sub ToClipboardCSub
+    strCopy = oComputer.Value
+    document.parentwindow.clipboardData.SetData "text", strCopy
+End Sub
+Sub FromClipboardCSub
+	oComputer.Value = document.parentwindow.clipboardData.GetData("text")
+End Sub
+Sub ToClipboardUSub
+    strCopy = oUser.Value
+    document.parentwindow.clipboardData.SetData "text", strCopy
+End Sub
+Sub FromClipboardUSub
+	oUser.Value = document.parentwindow.clipboardData.GetData("text")
+End Sub
+
+'***********************************************************************************************************************************
+'Lokale Routinen
+'***********************************************************************************************************************************
+'LAN Auswertung starten
+Sub SubLANAuswertung
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("lan.vbs " & oComputer.Value)
+End Sub
+
+
+'################################################
+'############ToDo: fix Tools#####################
+
+'Tools
+Sub SubWol
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("Tools.hta %" & oComputer.Value)
+End Sub
+Sub locked_unlocked
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("User.hta %" & oUser.Value)
+End Sub
+Sub info_faq
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("Info.hta %")
+End Sub
+Sub AccountManagement
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("User_Admininstration.hta %" & oUser.Value)
+End Sub
+
+
+'To Fix: Notepad starten
+Sub NotepadSub
+    Const NORMAL_WINDOW = 1
+    Set objShell = CreateObject("Shell.Application")
+    objShell.ShellExecute "notepad.exe", strPath&"\neu.txt", , , NORMAL_WINDOW
+End Sub
+
+
+
+'Sub GetClientInfoSCCM
+'	On Error Resume Next
+'	If oComputer.Value = "" Then
+'	msgbox "Bitte Rechnernamen eintragen !!!! / Please enter Clientname !!!!",vbExclamation,"Info"
+'
+'	Else
+'	strHTML = strHTML & "<iframe src=http://SERVERNAME/SMSReporting_CEN/MachDetails.asp?Machine=" & oComputer.value & " width=100% height=100% frameborder=0><p>Your Browser does not support IFrames.</p></iframe>"
+'	DataArea.InnerHTML = strHTML
+'	End If
+'End Sub
+
+'Sub GetAdvertInfoSCCM
+'	On Error Resume Next
+'	If oComputer.Value = "" Then
+'	msgbox "Bitte Rechnernamen eintragen !!!! / Please enter Clientname !!!!",vbExclamation,"Info"
+'
+'	Else
+'	strHTML = strHTML & "<iframe src=http://SERVERNAME/SMSReporting_CEN/Report.asp?ReportID=126&ComputerName=" & oComputer.value & " width=100% height=100% frameborder=0><p>Your Browser does not support IFrames.</p></iframe>"
+'	DataArea.InnerHTML = strHTML
+'	End If
+'End Sub
+
+
+'Sub GetNetworkInfoSCCM
+'	On Error Resume Next
+'	If oComputer.Value = "" Then
+'	msgbox "Bitte Rechnernamen eintragen !!!! / Please enter Clientname !!!!",vbExclamation,"Info"
+'
+'	Else
+'	strHTML = strHTML & "<iframe src=http://SERVERNAME/SMSReporting_CEN/Report.asp?ReportID=30&variable=" & oComputer.value & " width=100% height=100% frameborder=0><p>Your Browser does not support IFrames.</p></iframe>"
+'	DataArea.InnerHTML = strHTML
+'	End If
+'End Sub
+
+
+'################################################
+'################################################
+
+
+Sub RDPConn
+	Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("MSTSC /v:" & oComputer.value & " /f")
+End Sub
+
+Sub OnlinePrinter
+	Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("iexplore.exe http://" & oPrinter.value )
+End Sub
+
+Sub OnlinePrinter1
+	On Error Resume Next
+	If oPrinter.Value = "" Then
+		msgbox "Bitte Druckernamen eintragen !!!! / Please enter Printername !!!!",vbExclamation,"Info"
+		Else
+		strHTML = strHTML & "<iframe src=http://" & oPrinter.value & " width=100% height=100% frameborder=0><p>Your Browser does not support IFrames.</p></iframe>"
+		DataArea.InnerHTML = strHTML
+	End If
+End Sub
+
+
+'Right Panel FreeCommander
+Sub ToolstartFreeCommander
+	Set objShell = CreateObject("Wscript.Shell")
+	objShell.Run("C:\Apps\Admin-Console\App\FreeCommanderPortable\FreeCommanderPortable.exe")
+End Sub
+
+'Left Panel: Regedit ausführen
+Sub RegeditSub
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("C:\Apps\Admin-Console\App\OORegEdtor\OORegEdtor.exe")
+End Sub
+
+'Right Panel: PrinterTest
+Sub DruckerTest
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("C:\Apps\Admin-Console\App\Druckertest.cmd %")
+End Sub
+
+'***********************************************************************************************************************************
+'Computer Routinen
+'***********************************************************************************************************************************
+'Prüfung ob Rechner Online ist
+Sub GetUser1
+On Error Resume Next
+If oComputer.Value = "" Then
+	msgbox "Bitte Rechnernamen eintragen !!!! / Please enter hostname !!!!",vbExclamation,"Info"
+	'ElseIf StrComp(oComputer.Value, "CTX-%", 1)  Then
+	'msgbox "Bitte richtigen Rechnernamen eintragen !!!! / Please enter correct hostname !!!!",vbExclamation,"Info"
+	Else
+	On Error Resume Next
+	GetComputerOu
+		If strComputerOU = "" Then
+		PCAvailable.InnerHTML = "<marquee><font color=red>PC Account not exist !!!!   ------     Please try again a different PC Name !!!!</font></marquee>"
+		Else
+		Set objShell = CreateObject("WScript.Shell")
+		Set objExec = objShell.Exec("ping -n 1 -w 1000 " & oComputer.Value)
+		strPingResults = LCase(objExec.StdOut.ReadAll)
+		If InStr(strPingResults, "nicht") Then
+				PCAvailable.InnerHTML = oComputer.Value & " ist NICHT erreichbar!"
+		'		GetUser
+		'		GetUserInfo1
+			ElseIf InStr(strPingResults, "antwort") Then
+				PCAvailable.InnerHTML = oComputer.Value & " ist erreichbar!"
+				GetUser
+				GetUserInfo1
+			Else
+				PCAvailable.InnerHTML = oComputer.Value & " ist NICHT erreichbar!"
+		End If
+	End If
+End If
+
+End Sub
+
+'Computer angemeldeter User
+Sub GetUser
+On Error Resume Next
+strComputer = oComputer.Value
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+Set colComputer = objWMIService.ExecQuery ("Select * from Win32_ComputerSystem")
+For Each objComputer In colComputer
+        oUser.value = objComputer.UserName
+        oLogon = Split(oUser.value, "\")
+        oUser.value = oLogon(1)
+Next
+End Sub
+'Get Computer OU
+Sub GetComputerOU
+  On Error Resume Next
+  Const ADS_SCOPE_SUBTREE = 2
+  Set objConnection = CreateObject("ADODB.Connection")
+  Set objCommand =   CreateObject("ADODB.Command")
+  objConnection.Provider = "ADsDSOObject"
+  objConnection.Open "Active Directory Provider"
+  Set objCommand.ActiveConnection = objConnection
+  objCommand.Properties("Page Size") = 1000
+  objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE
+  objCommand.CommandText = "SELECT ADsPath FROM 'LDAP://DC=YOUR_DOMAIN,DC=INTRA' WHERE objectCategory='computer' " & "AND name='" & oComputer.value & "'"
+  Set objRecordSet = objCommand.Execute
+  objRecordSet.MoveFirst
+  Do Until objRecordSet.EOF
+    strHTML = objRecordSet.Fields("ADsPath").Value
+	strComputerOU = objRecordSet.Fields("ADsPath").Value
+    objRecordSet.MoveNext
+  Loop
+  DataArea.InnerHTML = strHTML
+End Sub
+
+
+'Windows Version auslesen
+Sub GetOSVersion
+    strComputer = oComputer.Value
+    Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+    Set colOperatingSystems = objWMIService.ExecQuery ("Select * from Win32_OperatingSystem")
+    For Each objOperatingSystem In colOperatingSystems
+        DataArea.InnerHTML = objOperatingSystem.Caption & " " & objOperatingSystem.Version & " - Service Pack " & objOperatingSystem.ServicePackMajorVersion & "." & objOperatingSystem.ServicePackMinorVersion
+    Next
+End Sub
+
+'Prozesse auslesen
+Sub GetProcesses
+    Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+    Set colProcesses = objWMIService.ExecQuery("Select * From Win32_Process")
+    strHTML = "<table border='1' style='border-collapse: collapse' "  & "bordercolor='#111111' width='50%' id='Table1' >"
+    For Each objProcess In colProcesses
+        strHTML = strHTML & "<tr>"
+        strHTML = strHTML & "<td width='30%'>" & objProcess.Name & "</td>"
+        strHTML = strHTML & "<td width='10%'>" & objProcess.ProcessID & "<Kill/td>"
+    Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+End Sub
+
+'Software auslesen
+Sub GetSoftware
+strComputer = oComputer.Value
+Set objWMIService = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+Set colSoftware = objWMIService.ExecQuery ("Select * from Win32_Product")
+strHTML = "<table border='1' style='font-family:verdana;font-size:12px;color:#1E356D;border-collapse: collapse' "  & "bordercolor='#111111' width='100%' id='Table1'>"
+strHTML = strHTML & "<tr>"
+strHTML = strHTML & "<td style='font-weight:bold'>Name</td>"
+strHTML = strHTML & "<td style='font-weight:bold'>Version</td>"
+strHTML = strHTML & "<td style='font-weight:bold'>Datum</td>"
+strHTML = strHTML & "<td style='font-weight:bold'>Pfad</td>"
+strHTML = strHTML & "</tr>"
+For Each objSoftware In colSoftware
+        strHTML = strHTML & "<tr>"
+        strHTML = strHTML & "<td width= '40%'>" & objSoftware.Name & "</td>"
+        strHTML = strHTML & "<td width= '10%'>" & objSoftware.Version & "</td>"
+        strHTML = strHTML & "<td width= '10%'>" & objSoftware.InstallDate & "</td>"
+        strHTML = strHTML & "<td width= '40%'>" & objSoftware.InstallLocation & "</td>"
+    Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+End Sub
+
+'Zeit auslesen
+Sub GetTime
+strComputer = oComputer.Value
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+Set colItems = objWMIService.ExecQuery("Select * From Win32_LocalTime")
+For Each objItem In colItems
+    strHTML = "Datum: " & objItem.Day &"."& objItem.Month &"."& objItem.Year & "<br>"
+    strHTML = strHTML & "Uhrzeit: " & objItem.Hour &":"& objItem.Minute &":"& objItem.Second
+Next
+DataArea.InnerHTML = strHTML
+End Sub
+
+'Drucker auslesen
+Sub DruckerSub
+strComputer = oComputer.value
+Set objWMIService = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+Set colInstalledPrinters =  objWMIService.ExecQuery ("Select * from Win32_Printer")
+strHTML = "<table border='1' style='border-collapse: collapse' "  & "bordercolor='#111111' width='50%' id='Table1' >"
+    For Each objPrinter In colInstalledPrinters
+      strHTML = strHTML & "<tr>"
+      strHTML = strHTML & "<td width='50%'>" & objPrinter.Name & "</td>"
+      strHTML = strHTML & "<td width='10%'>" & objPrinter.Default & "</td>"
+    Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+End Sub
+
+
+'PING ausführen
+Sub PingSub1
+On Error Resume Next
+strComputer = oComputer.Value
+strTarget = strComputer 'IP address or hostname
+Set objWMIService = GetObject("winmgmts:"  & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+Set colPings = objWMIService.ExecQuery ("Select * From Win32_PingStatus where Address = '" & strTarget & "'")
+If Err = 0 Then
+  Err.Clear
+  For Each objPing In colPings
+    If Err = 0 Then
+      Err.Clear
+      If objPing.StatusCode = 0 Then
+        strHTML = strHTML & strTarget & " ist erreichbar." & "<br>"
+        strHTML = strHTML &  "IP Adresse: " & objPing.ProtocolAddress & "<br>"
+        strHTML = strHTML &  "Gesendete Bytes: " & objPing.BufferSize & "<br>"
+        strHTML = strHTML &  "Antwortzeit: " & objPing.ResponseTime & " ms" & "<br>"
+        strHTML = strHTML &  "TTL: " & objPing.ResponseTimeToLive & " seconds" & "<br>"
+      Else
+        strHTML = strHTML &  strTarget & " ist nicht erreichbar." & "<br>"
+        strHTML = strHTML &  "Status Code: " & objPing.StatusCode & "<br>"
+      End If
+    Else
+      Err.Clear
+      strHTML = strHTML &  "Unable to call Win32_PingStatus on " & strComputer & "." & "<br>"
+    End If
+  Next
+Else
+  Err.Clear
+  strHTML = strHTML &  "Unable to call Win32_PingStatus on " & strComputer & "." & "<br>"
+End If
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+Sub PingSub2
+On Error Resume Next
+Set objShell = CreateObject("WScript.Shell")
+Set objExec = objShell.Exec("ping -n 1 -w 1000 " & oComputer.Value)
+strPingResults = LCase(objExec.StdOut.ReadAll)
+If InStr(strPingResults, "reply") Then
+		DataArea.InnerHTML = oComputer.Value & " ist erreichbar!"
+	ElseIf InStr(strPingResults, "antwort") Then
+		DataArea.InnerHTML = oComputer.Value & " ist erreichbar!"
+	Else
+  		DataArea.InnerHTML = oComputer.Value & " ist NICHT erreichbar!"
+End If
+End Sub
+
+
+Sub PingSub3
+Set objPing = GetObject("winmgmts:Win32_PingStatus.address='" & oComputer.Value & "'")
+If IsNull(objPing.StatusCode) Or objPing.StatusCode <> 0 Then
+  DataArea.InnerHTML = oComputer.Value & " ist NICHT erreichbar!"
+Else
+  DataArea.InnerHTML = oComputer.Value & " ist erreichbar!"
+End If
+End Sub
+
+
+'TRACERT ausführen
+Sub TracertSub
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("%comspec% /k tracert " & oComputer.value)
+End Sub
+'NSLOOKUP ausführen
+Sub NSLookupSub
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("%comspec% /k nslookup " & oComputer.value)
+End Sub
+'Explorer mit Remote C$ starten
+Sub ExplorerSub
+    Const NORMAL_WINDOW = 1
+    Set objShell = CreateObject("Shell.Application")
+    objShell.ShellExecute "explorer.exe", "\\" & oComputer.value & "\c$", , , NORMAL_WINDOW
+End Sub
+'Explorer mit Remote C$\Logs starten
+Sub GetLogs1
+    Const NORMAL_WINDOW = 1
+    Set objShell = CreateObject("Shell.Application")
+    objShell.ShellExecute "explorer.exe", "\\" & oComputer.value & "\c$\logs", , , NORMAL_WINDOW
+End Sub
+'CMD per PSEXEC
+Sub PsexecCmdSub
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("%comspec% /k psexec.exe \\" & oComputer.value & " cmd")
+End Sub
+
+'CMD per PSEXEC
+Sub RemoteSet
+    Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("%comspec% /k psexec.exe \\" & oComputer.value & " cmd /C set")
+End Sub
+
+
+'Aufschalt ausführen
+Sub AufschaltSub
+GetComputerOU
+Set objShell = CreateObject("Wscript.Shell")
+	objShell.Run("""C:\Program Files (x86)\Microsoft Configuration Manager\bin\i386\CmRcViewer.exe """ & oComputer.Value)
+
+End Sub
+
+
+'SMS Abfrage auschalten
+Sub SMSAusSub
+Set objReg = GetObject("winmgmts:\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "SOFTWARE\Microsoft\SMS\Client\Client Components\Remote Control"
+ValueName = "Permission Required"
+strValue = &H00000000
+objReg.SetDWORDValue HKLM, strKeyPath, ValueName, strValue
+DataArea.InnerHTML = "...fertig"
+End Sub
+'SMS Abfrage einschalten
+Sub SMSEinSub
+Set objReg = GetObject("winmgmts:\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "SOFTWARE\Microsoft\SMS\Client\Client Components\Remote Control"
+ValueName = "Permission Required"
+strValue = &H00000001
+objReg.SetDWORDValue HKLM, strKeyPath, ValueName, strValue
+DataArea.InnerHTML = "...fertig"
+End Sub
+'Eventviewer anzeigen
+Sub EventSub
+    Set objShell = CreateObject("Wscript.Shell")
+        objShell.Run ("eventvwr " & oComputer.value)
+End Sub
+'Computermanagement anzeigen
+Sub CompMgmtSub
+    Set objShell = CreateObject("Wscript.Shell")
+	objShell.Run ("compmgmt.msc /computer=\\" & oComputer.Value)
+End Sub
+'Geöffnete Dateien anzeigen anzeigen
+Sub OpenFilesSub
+    Set objShell = CreateObject("Wscript.Shell")
+	objShell.Run ("fsmgmt.msc /computer=\\" & oComputer.Value)
+End Sub
+'Dienste anzeigen
+Sub PCServiceSub
+    Set objShell = CreateObject("Wscript.Shell")
+	objShell.Run ("services.msc /computer=\\" & oComputer.Value)
+End Sub
+
+'Internet Reiter einblenden
+Sub InternetEinSub
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+strHTML = strSID
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "Software\Policies\Microsoft\Internet Explorer\Control Panel"
+strEntryName = "SecurityTab"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "ConnectionsTab"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "ProgramsTab"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "AdvancedTab"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "Profiles"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "ContentTab"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+DataArea.InnerHTML = "...fertig"
+End Sub
+'Internet Reiter ausblenden
+Sub InternetAusSub
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+strHTML = strSID
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "Software\Policies\Microsoft\Internet Explorer\Control Panel"
+strEntryName = "SecurityTab"
+strValue = &H00000001
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "ConnectionsTab"
+strValue = &H00000001
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "ProgramsTab"
+strValue = &H00000001
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "AdvancedTab"
+strValue = &H00000001
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "Profiles"
+strValue = &H00000001
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strEntryName = "ContentTab"
+strValue = &H00000001
+objReg.SetDWORDValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+DataArea.InnerHTML = "...fertig"
+End Sub
+
+
+'Proxykonfiguration auslesen
+Sub GetProxy
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+strHTML = strHTML & "<b>Proxykonfiguration vom " & oComputer.value & " :</b><br>"
+strEntryName = "ProxyEnable"
+objReg.GetDwordValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+If strValue = 0 Then
+strHTML = strHTML & "<b>Proxy deaktiviert!</b><br>"
+Else
+strHTML = strHTML & "<b>Proxy aktiviert!</b><br>"
+strEntryName = "AutoConfigURL"
+objReg.GetStringValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strHTML = strHTML & "<b>Automatisches Konfigurationsscript :</b> " & strValue & "<br>"
+strEntryName = "ProxyServer"
+objReg.GetStringValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strHTML = strHTML & "<b>Proxyserver :</b> " & strValue & "<br>"
+strEntryName = "ProxyOverride"
+objReg.GetStringValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strHTML = strHTML & "<b>Ausnahmentabelle :</b> " & strValue & "<br>"
+End If
+
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+
+'Proxykonfiguration schreiben
+Sub SetProxy
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+objReg.SetStringValue HKU, strSID&"\"&strKeyPath, "AutoConfigURL", ""
+objReg.SetDwordValue HKU, strSID&"\"&strKeyPath, "ProxyEnable", "1"
+objReg.SetStringValue HKU, strSID&"\"&strKeyPath, "ProxyServer","YOUR_PROXY_SERVER:8080"
+objReg.SetStringValue HKU, strSID&"\"&strKeyPath, "ProxyOverride", "<local>10.*;*.ACME.de;*.ACME.com;*.ACME.net;*.ACME-America.net;*.ACME-EU.net;*.ACME-AP.net"
+DataArea.InnerHTML = "Proxy ist eingetragen"
+End Sub
+
+'Proxykonfiguration schreiben - Kein Proxy
+Sub SetProxydisable
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+objReg.SetStringValue HKU, strSID&"\"&strKeyPath, "AutoConfigURL", ""
+objReg.SetStringValue HKU, strSID&"\"&strKeyPath, "ProxyServer", ""
+objReg.SetStringValue HKU, strSID&"\"&strKeyPath, "ProxyOverride", ""
+objReg.SetDwordValue HKU, strSID&"\"&strKeyPath, "ProxyEnable", "0"
+DataArea.InnerHTML = "Proxy wurde deaktiviert !"
+End Sub
+
+
+'Rechner Infos auslesen
+Sub GetPCInfo
+Const HARD_DISK = 3
+Set objWMIService = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & oComputer.Value & "\root\cimv2")
+Set colBIOS = objWMIService.ExecQuery ("Select * from Win32_BIOS")
+Set colBoard = objWMIService.ExecQuery("Select * from Win32_BaseBoard")
+Set colCPU = objWMIService.ExecQuery("Select * from Win32_Processor")
+Set colComputer = objWMIService.ExecQuery ("Select * from Win32_ComputerSystem")
+Set colOS = objWMIService.ExecQuery ("Select * from Win32_OperatingSystem")
+Set colDisks = objWMIService.ExecQuery ("Select * from Win32_LogicalDisk Where DriveType = " & HARD_DISK & "")
+Set colcdrom = objWMIService.ExecQuery ("Select * from Win32_CDROMDrive")
+Set colItems = objWMIService.ExecQuery ("Select * from Win32_DesktopMonitor")
+
+For Each objBIOS In colBIOS
+    For Each objBoard In colBoard
+	     For Each objCPU In colCPU
+		      For Each objComputer In colComputer
+		      	For Each objOS In colOS
+
+
+strHTML = "<b>PC-Informationen:</b><br>"
+strHTML = strHTML & "<br>"
+strHTML = strHTML & "Name: " & objComputer.Name & "<br>"
+strHTML = strHTML & "<br>"
+strHTML = strHTML & "OS Version: " & objOS.Caption & " " & objOS.Version & " - Service Pack " & objOS.ServicePackMajorVersion & "." & "<br>"
+strHTML = strHTML & "System Model: " & objComputer.Model & "<br>"
+strHTML = strHTML & "Hersteller: " & objBoard.Manufacturer & "<br>"
+strHTML = strHTML & "Identnr./ Service Tag: " & objBIOS.SerialNumber & "<br>"
+strHTML = strHTML & "Boardtyp: " & objBoard.Product & "<br>"
+strHTML = strHTML & "<br><b>BIOS Informationen:</b><br>"
+strHTML = strHTML & "Name: " & objBIOS.Name & "<br>"
+strHTML = strHTML & "Release Date: " & objBIOS.ReleaseDate & "<br>"
+strHTML = strHTML & "<br><b>Speicher & Processor Informationen:</b><br>"
+strHTML = strHTML & "Prozessor: " & objCPU.Name & " - " & objCPU.Description & "<br>"
+strHTML = strHTML & "Speicher/RAM: " & Int((objComputer.TotalPhysicalMemory) /1048576)+1 & " MB<br>"
+strHTML = strHTML & "Free RAM: " & Int((objOS.FreePhysicalMemory) /1024)+1 & " MB<br>"
+strHTML = strHTML & "Total Virtual Memory: " & Int((objOS.TotalVirtualMemorySize) /1024) & " MB<br>"
+strHTML = strHTML & "Free Virtual Memory: " & Int((objOS.FreeVirtualMemory) /1024) & " MB<br>"
+strHTML = strHTML & "<br><b>Monitor:</b><br>"
+					For Each objItem in colItems
+strHTML = strHTML & "Auflösung: " & objItem.ScreenWidth & " x " & objItem.ScreenHeight & "</font> pxl -- " & objItem.Name & "<br>"
+					Next
+strHTML = strHTML & "<br><b>Local Drives:</b><br>"
+					For Each objDisk in colDisks
+strHTML = strHTML & "Drive <b>" & objDisk.DeviceID & "</b><br>"
+strHTML = strHTML & "Disk Space: " & Int((objDisk.Size) /1048576) & " MB / " & Int(((objDisk.Size) /1048576)/1024) & " GB</font><br>"
+strHTML = strHTML & "Free Disk Space: " & Int((objDisk.FreeSpace) /1048576) & " MB / " & Int(((objDisk.FreeSpace) /1048576)/1024) & " GB</font><br><br>"
+
+
+					Next
+strHTML = strHTML & "<br><b>CDRom Drives:</b><br>"
+					For Each objcdrom in colcdrom
+					strHTML = strHTML & "Drive <b>" & objcdrom.Drive & "</b><br>"
+    				'strHTML = strHTML & "Availability: " & objcdrom.Availability & "<br>"
+    				'	For Each strCapability in objcdrom.Capabilities
+        			'		strHTML = strHTML & "Capability: "& strCapability & "<br>"
+    				'	Next
+    				'strHTML = strHTML & "Caption: " & objcdrom.Caption & "<br>"
+    				'strHTML = strHTML & "Description: " & objcdrom.Description & "<br>"
+    				'strHTML = strHTML & "Device ID: " & objcdrom.DeviceID & "<br>"
+    				strHTML = strHTML & "Manufacturer: " & objcdrom.Manufacturer & "<br>"
+    				strHTML = strHTML & "Media Loaded: " & objcdrom.MediaLoaded & "<br>"
+    				strHTML = strHTML & "Media Type: " & objcdrom.MediaType & "<br>"
+    				strHTML = strHTML & "Name: " & objcdrom.Name & "<br>"
+    				'strHTML = strHTML & "PNP Device ID: " & objcdrom.PNPDeviceID & "<br>"
+    				'strHTML = strHTML & "SCSI Bus: " & objcdrom.SCSIBus & "<br>"
+    				'strHTML = strHTML & "SCSI Logical Unit: " & objcdrom.SCSILogicalUnit & "<br>"
+    				'strHTML = strHTML & "SCSI Port: " & objcdrom.SCSIPort & "<br>"
+    				'strHTML = strHTML & "SCSI Target ID: " & objcdrom.SCSITargetId & "<br>"
+					Next
+				Next
+            Next
+        Next
+    Next
+Next
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+'Dienste auslesen
+Sub GetServices
+strComputer = oComputer.Value
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+Set colRunningServices = objWMIService.ExecQuery("Select * from Win32_Service ORDER BY DisplayName")
+strHTML = "<table border='1' style='border-collapse: collapse' "  & "bordercolor='#111111' width='70%' id='Table1' >"
+For Each objService In colRunningServices
+        strHTML = strHTML & "<tr>"
+        strHTML = strHTML & "<td width= '50%'>" & objService.DisplayName & "</td>"
+        strHTML = strHTML & "<td>" & objService.State & "</td>"
+        strHTML = strHTML & "<td>" & objService.StartMode & "</td>"
+Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+End Sub
+
+
+'Angewendete Policy auslesen
+Sub GetComputerPolicy
+strComputer = oComputer.Value
+Set objWMIService = GetObject ("winmgmts:\\" & strComputer & "\root\rsop\computer")
+Set colItems = objWMIService.ExecQuery("Select * from RSOP_GPO")
+strHTML = "<table border='1' style='font-family:verdana;font-size:12px;font-weight:normal;color:#1E356D;border-collapse: collapse' "  & "bordercolor='#111111' width='100%' id='Table1' >"
+For Each objItem In colItems
+        strHTML = strHTML & "<tr>"
+        strHTML = strHTML & "<td width= '50%'>" & objItem.Name & "</td>"
+        strHTML = strHTML & "<td width= '50%'>" & objItem.Enabled & "</td>"
+        Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+End Sub
+
+
+'Lan Karte auslesen
+Sub GetLanSub
+On Error Resume Next
+strComputer = oComputer.Value
+Set objRegistry = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
+sNetPath = "SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}"
+Set objWMIService = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+Set colAdapters = objWMIService.ExecQuery ("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True")
+For Each objAdapter In colAdapters
+        strHTML = strHTML & "<br>"
+        strHTML = strHTML & "LAN-Karte: " & objAdapter.Description & "<br>"
+        strHTML = strHTML & "MAC-Adresse: " & objAdapter.MACAddress & "<br>"
+		GetLANSpeed
+		strHTML = strHTML & "Speed: " & LANSpeed & "<br>"
+If Not IsNull(objAdapter.IPAddress) Then
+      For i = 0 To UBound(objAdapter.IPAddress)
+        strHTML = strHTML & "IP-Adresse: " & objAdapter.IPAddress(i) & "<br>"
+      Next
+End If
+Next
+
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+
+
+'Get LAN Speed
+Sub GetLANSpeed
+strComputer = oComputer.Value
+Set objReg = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
+strKeyPath = "System\Currentcontrolset\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}"
+strDriverValue = "DriverDesc"
+strModeValue1 = "DuplexMode"
+strModeValue2 = "SpeedDuplex"
+strModeValue3 = "RequestedMediaType"
+strModeValue4 = "Media"
+strModeValue5 = "Media_Type"
+
+LANSpeed = "Einstellung nicht erkannt!"
+
+objReg.EnumKey HKLM, strKeyPath, arrSubKeys
+
+For Each subkey In arrSubKeys
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey,strDriverValue, strValue
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey,strModeValue1,dwValue
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey,strModeValue11,dwValue1
+If dwValue1 <> "" Then
+'3Com
+ dwValue = LCase(dwValue)
+  Select Case(dwValue)
+   Case "hardwaredefault" strModeText1 = "Hardware Default"
+   Case "halfduplex" strModeText1 = "Half Duplex"
+   Case "fullduplex" strModeText1 = "Full Duplex"
+  End Select
+'3Com Media
+ dwValue1 = LCase(dwValue1)
+  Select Case dwValue1
+   Case "hardwaredefault" strModeText11 = "Hardware Default / "
+   Case "autoselect" strModeText11 = "Auto / "
+   Case "10baset" strModeText11 = "10 Mbps / "
+   Case "100basetx" strModeText11 = "100Mbps / "
+  End Select
+ LANSpeed = strModeText11 & strModeText1 & "<br>"
+ElseIf dwValue <> "" Then
+'Realtek
+  Select Case(dwValue)
+   Case 1 strModeText1 = "Auto"
+   Case 2 strModeText1 = "10Mbps / Half Duplex"
+   Case 3 strModeText1 = "10Mbps / Full Duplex"
+   Case 4 strModeText1 = "100Mbps / Half Duplex"
+   Case 5 strModeText1 = "100Mbps / Full Duplex"
+  End Select
+ LANSpeed = strModeText1
+' WScript.Echo strComputer & ";" & strValue & ";" & strModeValue1 & ";" & strModeText1
+End If
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey, strModeValue2, dwValue
+If dwValue <> "" Then
+'Intel
+  Select Case dwValue
+   Case 0 strModeText2 = "Auto"
+   Case "10baset" strModeText11 = "10 Mbps / "
+   Case 1 strModeText2 = "10Mbps / Half Duplex"
+   Case 2 strModeText2 = "10Mbps / Full Duplex"
+   Case 3 strModeText2 = "100Mbps / Half Duplex"
+   Case 4 strModeText2 = "100Mbps / Full Duplex"
+  End Select
+ LANSpeed = strModeText2
+End If
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey, strModeValue3, dwValue
+If dwValue <> "" Then
+'Broadcom
+  Select Case dwValue
+   Case 0 strModeText3 = "Auto"
+   Case "10baset" strModeText11 = "10 Mbps / "
+   Case 3 strModeText3 = "10Mbps / Half Duplex"
+   Case 4 strModeText3 = "10Mbps / Full Duplex"
+   Case 5 strModeText3 = "100Mbps / Half Duplex"
+   Case 6 strModeText3 = "100Mbps / Full Duplex"
+  End Select
+ LANSpeed = strModeText3
+End If
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey, strModeValue4, dwValue
+If dwValue <> "" Then
+'3Com 3C905b
+ dwValue = LCase(dwValue)
+  Select Case dwValue
+   Case "auto" strModeText4 = "Auto"
+   Case "10baset" strModeText11 = "10 Mbps / "
+   Case "10half" strModeText4 = "10Mbps / Half Duplex"
+   Case "10full" strModeText4 = "10Mbps / Full Duplex"
+   Case "100half" strModeText4 = "100Mbps / Half Duplex"
+   Case "100full" strModeText4 = "100Mbps / Full Duplex"
+  End Select
+ LANSpeed = strModeText4
+End If
+objReg.GetStringvalue HKLM, strKeyPath & "\" & subkey, strModeValue5, dwValue
+If dwValue <> "" Then
+'3Com 3C905c
+ dwValue = LCase(dwValue)
+  Select Case dwValue
+   Case "autoselect" strModeText5 = "Auto"
+   Case "10baset" strModeText11 = "10 Mbps / "
+   Case "10half" strModeText5 = "10Mbps / Half Duplex"
+   Case "10full" strModeText5 = "10Mbps / Full Duplex"
+   Case "100half" strModeText5 = "100Mbps / Half Duplex"
+   Case "100full" strModeText5 = "100Mbps / Full Duplex"
+  End Select
+ LANSpeed = strModeText5
+End If
+Next
+    'DataArea.InnerHTML = strHTML
+End Sub
+
+
+'UpTime auslesen
+Sub GetUpTime
+strComputer = oComputer.Value
+Set objDatetime = CreateObject("WbemScripting.SWbemDateTime")
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+Set colItems = objWMIService.ExecQuery("Select * from Win32_OperatingSystem",,48)
+For Each objItem In colItems
+    objDatetime.Value = objItem.LastBootUpTime
+    DataArea.InnerHTML = "Der PC läuft seit: " & objDatetime.GetVarDate
+Next
+End Sub
+
+
+'Security Lasche im Explorer einblenden
+Sub ExplorerSecuritySub
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+strHTML = strSID
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+strKeyPath = "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"
+strEntryName = "NoSecurityTab"
+strValue = &H00000000
+objReg.SetDWORDValue HKU, strSID & "\" & strKeyPath, strEntryName, strValue
+DataArea.InnerHTML = "...fertig"
+End Sub
+
+
+'Lan Karte auf 100mb/Full ändern
+Sub SetLanSpeed
+strComputer = oComputer.Value
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set objRegistry = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
+sNetPath = "SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}"
+objRegistry.EnumKey HKLM, sNetPath, arrSubKeys
+For Each subkey In arrSubKeys
+objRegistry.GetStringvalue HKLM, sNetPath & "\" & subkey, "ComponentId", strValue
+If Not IsNull(strValue) Then
+strValue = LCase(strValue)
+section = Left(Replace(Replace(strValue, "pci\ven_", ""), "&dev_",""), 8)
+ReadDuplexIni section, subkey
+End If
+Next
+End Sub
+Sub ReadDuplexIni(section, subkey)
+file = "App\nic-konf.ini"
+If fso.FileExists(file) Then
+Set ini = fso.OpenTextFile(file, 1, False)
+Do While ini.AtEndOfStream = False
+line = ini.ReadLine
+If LCase(line) = "[" & LCase(section) & "]" Then
+line = ini.ReadLine
+Do While Left(line, 1) <> "["
+If Left(line, 1) <> ";" And Len(line) > 0 Then
+UpdateReg line, subkey
+End If
+If ini.AtEndOfStream Then Exit Do
+line = ini.ReadLine
+Loop
+Exit Do
+End If
+Loop
+ini.Close
+End If
+End Sub
+Sub UpdateReg(line, subkey)
+key = Split(line, "=")
+lRC=objRegistry.SetStringValue(HKLM, sNetPath & "\" & subkey, key(0), key(1))
+MsgBox("Die Netzwerkkarte wurde auf 100 Mbit / Full Duplex konfiguriert." & VbCrLf & VbCrLf & "Bitte den Rechner neustarten."),,"Achtung"
+End Sub
+
+
+'LogFiles ausgeben
+Sub GetLogs2
+strComputer = oComputer.Value
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+Set objFolder = objFSO.GetFolder("\\" & strComputer & "\C$\ProgramData\McAfee\DesktopProtection")
+Set objFiles = objFolder.Files
+strHTML = "<table border='1' style='border-collapse: collapse' "  & "bordercolor='#111111' width='80%' id='Table1' >"
+For Each file In objFiles
+	 strHTML = strHTML & "<tr><td><a href='\\" & strComputer & "\C$\Logs\" & file.Name & "'/a>" & file.Name & "</td><td>" & file.DateLastModified & "</td></tr>"
+Next
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+'User Drucker anzeigen
+Sub GetUserPrinter
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+strKeyPath = "Software\Microsoft\Windows NT\CurrentVersion\Windows"
+strEntryName = "Device"
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+'strHTML = "<H4>Standarddrucker des Anwenders</H4>"
+objReg.GetStringValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strHTML = strHTML & "<b>Standarddrucker:</b>" &"<br>" & strValue &"<br>"&"<br><b>Drucker:</b><br>"
+strKeyPath2 = "Software\Microsoft\Windows NT\CurrentVersion\PrinterPorts"
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+objReg.EnumValues HKU, strSID&"\"&strKeyPath2, strEntryName, strValue
+'strHTML = "<H4>Drucker des Anwenders</H4>"
+For i=0 To UBound(strEntryName)
+   strHTML = strHTML & strEntryName(i) &"<br>"
+Next
+DataArea.InnerHTML = strHTML
+End Sub
+'***********************************************************************************************************************************
+'User Routinen
+'***********************************************************************************************************************************
+Sub GetPC
+Set objShell = CreateObject("WScript.Shell")
+Set objExec = objShell.Exec("rechner.cmd " & oUser.Value)
+strResults = UCase(objExec.StdOut.ReadAll)
+If InStr(strResults, "KEINEM") Then
+  strHTML =  "Benutzer kann keinem Rechner zugeordnet werden"
+Else
+'oComputer.Value = Left(strResult, 25)
+oPC = Split(strResults, " ")
+oComputer.Value = oPC(5)
+End If
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+'User Info auslesen
+Sub GetUserInfo1
+On Error Resume Next
+GetUserOu1
+If strCNU = "" Then
+strHTML = strHTML & "<table style='font-family:verdana;font-size:10px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:12px;color:#1E356D'><b>User Info:</b></td></tr>"
+strHTML = strHTML & "<tr><td>"
+strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-weight:bold'>Account nicht vorhanden</td></tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td></tr>"
+strHTML = strHTML & "</table>"
+DataAreaUser.InnerHTML = strHTML
+Else
+IF strCNU = "NULL" Then
+strHTML = strHTML & "<table style='font-family:verdana;font-size:10px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:12px;color:#1E356D'><b>User Info:</b></td></tr>"
+strHTML = strHTML & "<tr><td>"
+strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-weight:bold'>Kein Account angemeldet.</td></tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td></tr>"
+strHTML = strHTML & "</table>"
+DataAreaUser.InnerHTML = strHTML
+
+Else
+Set objUser = GetObject ("LDAP://" & strCNU)
+strHTML = strHTML & "<table style='font-family:verdana;font-size:10px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:12px;color:#1E356D'><b>User Info:</b></td></tr>"
+strHTML = strHTML & "<tr><td valign=top>"
+strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Name: </td><td style='font-weight:bold;color=1E356D' bgcolor=#E5E5E5>" & objUser.displayname & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>E-Mail: </td><td bgcolor=#E5E5E5><a href=mailto:" & objUser.mail & ">"& objUser.mail &"</a></td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Telefon: </td><td bgcolor=#E5E5E5>" & objUser.telephoneNumber & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Handy: </td><td bgcolor=#E5E5E5>" & objUser.mobile & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Firma: </td><td bgcolor=#E5E5E5>" & objUser.company & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Adresse: </td><td bgcolor=#E5E5E5>" & objUser.streetAddress & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>PLZ: </td><td bgcolor=#E5E5E5>" & objUser.postalcode & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Stadt: </td><td bgcolor=#E5E5E5>" & objUser.l & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Land: </td><td bgcolor=#E5E5E5>" & objUser.c & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Beschreibung: </td><td bgcolor=#E5E5E5>" & objUser.description & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Department: </td><td bgcolor=#E5E5E5>" & objUser.department & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Manager: </td><td bgcolor=#E5E5E5>" & objUser.manager & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Home-LW: </td><td bgcolor=#E5E5E5><a href='" & objUser.homedirectory & "'>" & objUser.homedirectory & "</a></td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Logon Script: </td><td bgcolor=#E5E5E5>" & objUser.scriptpath & "</td></tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td>"
+strHTML = strHTML & "<td valign=top>"
+strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Bad PW : </td><td bgcolor=#E5E5E5 width=250><b>" & objUser.badpwdcount & "</b></td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>PW Expire : </td><td bgcolor=#E5E5E5 width=250><b>" & objUser.PasswordExpirationDate & "</b></td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>AC Ablauf: </td><td bgcolor=#E5E5E5 width=250>" & objUser.AccountExpirationDate & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Country: </td><td bgcolor=#E5E5E5 width=250>" & Left(objUser.employeeid,3) & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Pers. Nr: </td><td bgcolor=#E5E5E5 width=250>" & Right(objUser.employeeid,12) & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>BK: </td><td bgcolor=#E5E5E5 width=250>" & Left(objUser.employeenumber,4) & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Kostenstelle: </td><td bgcolor=#E5E5E5 width=250>" & Right(objUser.employeenumber,11) & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>AC Expire: </td><td bgcolor=#E5E5E5 width=250>"
+If ADS_UF_PASSWORD_EXPIRED = True Then
+						strHTML = strHTML & "JA"
+                        strHTML = strHTML &  "</td></tr>"
+   					Else
+   						strHTML = strHTML & "NEIN"
+                        strHTML = strHTML &  "</td></tr>"
+
+                    End If
+
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>PW Last Set : </td><td bgcolor=#E5E5E5 width=250>" & objUser.PasswordLastChanged & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>AC-Created : </td><td bgcolor=#E5E5E5 width=250>" & objUser.whencreated & "</td></tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td></tr>"
+strHTML = strHTML & "<tr><td valign=top colspan=3>"
+strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td bgcolor=#EAEEF5><b><font color=#1E356D size=4>Locked : </td><td bgcolor=#EAEEF5><b><font color=red size=5>"
+strHTML = strHTML & "<td width=20></td><td bgcolor=#EAEEF5><b><font color=1E356D size=4>Disabled : </td><td bgcolor=#EAEEF5><b>"
+If objUser.AccountDisabled = True Then
+                        strHTML = strHTML & "<font color=red size=5>JA"
+                  Else
+                        strHTML = strHTML & "<font color=#1FDC00 size=5>Nein"
+                  End If
+strHTML = strHTML & "</font></b></td>"
+strHTML = strHTML & "</tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td></tr>"
+strHTML = strHTML & "<tr><td>"
+strHTML = strHTML & "<table>"
+strHTML = strHTML & "<tr>"
+strHTML = strHTML & "</td>"
+strHTML = strHTML & "</tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td></tr>"
+strHTML = strHTML & "<tr><td valign=top colspan=3>"
+strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Mail-Server: </td><td bgcolor=#E5E5E5>" & objUser.msExchHomeServerName & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>Postfach Speicher: </td><td bgcolor=#E5E5E5>" & objUser.homeMDB & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>MB EXCH: </td><td bgcolor=#E5E5E5>" & objUser.mDBStorageQuota & "</td></tr>"
+strHTML = strHTML & "<tr><td style='font-weight:bold;color=#ffffff' bgcolor=#1E356D>MB Limit: </td><td bgcolor=#E5E5E5>" & objUser.mDBOverQuotaLimit & "</td></tr>"
+strHTML = strHTML & "</table>"
+strHTML = strHTML & "</td></tr>"
+strHTML = strHTML & "</table>"
+'strHTML = strHTML & "Profilpfad: " & objUser.ProfilePath & "<br>"
+DataAreaUser.InnerHTML = strHTML
+End If
+End If
+
+End Sub
+
+'Status AD UserAccount
+Sub Account_Status
+On Error Resume Next
+GetUserOu1
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:10px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:12px;color:#1E356D'><b>Active Directory User Account locked Status (ONLY for Germany):</b></td></tr>"
+	strHTML = strHTML & "<tr><td valign=top>"
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td valign=top bgcolor=#C2C2C2>Domain Controller</td><td width=40 align=center> - </td><td bgcolor=#C2C2C2>Locked Status? JA/NEIN</td></tr>"
+	strHTML = strHTML & "</tr>"
+    strHTML = strHTML & "</table></td></tr></table>"
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+
+
+'Status AD UserAccount NEW
+Sub Account_Status_NEW
+On Error Resume Next
+GetUserOu1
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:10px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:12px;color:#1E356D'><b>Active Directory User Account locked Status (World Wide):</b></td></tr>"
+	strHTML = strHTML & "<tr><td valign=top>"
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td valign=top bgcolor=#C2C2C2>Domain Controller</td><td width=40 align=center> - </td><td bgcolor=#C2C2C2>Locked Status? JA/NEIN</td></tr>"
+
+		
+    strHTML = strHTML & "</table></td></tr></table>"
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+
+
+' Passwort Generierer
+Sub PWGenNew
+Dim pGenNum, newpass, inFlag, pgLength, x, fso, ts, passLen
+Const ForWriting = 2
+passLen = 8
+
+'Give inFlag (input Flag) an initial value to ensure we run once
+inFlag = 1
+pGenNum = 1
+
+'Generate the number of required passwords.
+'Use a dictionary object to ensure uniqueness.
+Dim objDict
+Set objDict = CreateObject("Scripting.Dictionary")
+Do Until objDict.Count = CInt(pGenNum)
+    newpass = generatePassword(passLen)
+    If Not objDict.Exists(newpass) Then
+           objDict.Add newpass, "Unique Password"
+        passList = passList & newpass
+    End If
+Loop
+
+
+End Sub
+Function generatePassword(PASSWORD_LENGTH)
+
+Dim NUMLOWER, NUMUPPER, LOWERBOUND, UPPERBOUND, LOWERBOUND1, UPPERBOUND1
+Dim newPassword, count, pwd
+Dim pCheckComplex, pCheckComplexUp, pCheckComplexLow, pCheckComplexNum, pCheckAnswer
+
+
+ NUMLOWER    = 48  ' 48 = 0
+ NUMUPPER    = 57  ' 57 = 9
+ LOWERBOUND  = 65  ' 65 = A
+ UPPERBOUND  = 90  ' 90 = Z
+ LOWERBOUND1 = 97  ' 97 = a
+ UPPERBOUND1 = 122 ' 122 = z
+ pCheckComplexUp  = 0 ' used later to check number of character types in password
+ pCheckComplexLow = 0 ' used later to check number of character types in password
+ pCheckComplexNum = 0 ' used later to check number of character types in password
+
+
+
+ ' initialize the random number generator
+ Randomize()
+
+ newPassword = ""
+ count = 0
+ DO UNTIL count = PASSWORD_LENGTH
+   ' generate a num between 2 and 10
+
+ ' if num is between 3 and 5 create a lowercase
+   If Int( ( 10 - 2 + 1 ) * Rnd + 2 ) > 2 And  Int( ( 10 - 2 + 1 ) * Rnd + 2 ) <= 5 Then
+    pwd = Int( ( UPPERBOUND1 - LOWERBOUND1 + 1 ) * Rnd + LOWERBOUND1 )
+
+    ' if num is 6 or 7 generate an uppercase
+   Elseif Int( ( 10 - 2 + 1 ) * Rnd + 2 ) > 5 And  Int( ( 10 - 2 + 1 ) * Rnd + 2 ) <= 7 Then
+    pwd = Int( ( UPPERBOUND - LOWERBOUND + 1 ) * Rnd + LOWERBOUND )
+
+   Else
+       pwd = Int( ( NUMUPPER - NUMLOWER + 1 ) * Rnd + NUMLOWER )
+   End If
+
+  newPassword = newPassword + Chr( pwd )
+
+  count = count + 1
+
+  'Check to make sure that a proper mix of characters has been created.  If not discard the password.
+  If count = (PASSWORD_LENGTH) Then
+      For pCheckComplex = 1 To PASSWORD_LENGTH
+          'Check for uppercase
+          If Asc(Mid(newPassword,pCheckComplex,1)) >64 And Asc(Mid(newPassword,pCheckComplex,1))< 90 Then
+                  pCheckComplexUp = 1
+          'Check for lowercase
+          ElseIf Asc(Mid(newPassword,pCheckComplex,1)) >96 And Asc(Mid(newPassword,pCheckComplex,1))< 123 Then
+                  pCheckComplexLow = 1
+          'Check for numbers
+          ElseIf Asc(Mid(newPassword,pCheckComplex,1)) >47 And Asc(Mid(newPassword,pCheckComplex,1))< 58 Then
+                  pCheckComplexNum = 1
+          End If
+      Next
+
+      'Add up the number of character sets.  We require 3 or 4 for a complex password.
+      pCheckAnswer = pCheckComplexUp+pCheckComplexLow+pCheckComplexNum
+
+      If pCheckAnswer < 3 Then
+          newPassword = ""
+          count = 0
+      End If
+  End If
+ Loop
+'The password is good so return it
+ generatePassword = newPassword
+
+
+
+End Function
+
+
+'Reset User Password
+Sub Reset_Password
+Dim answer1
+intanswer=MsgBox("Wollen Sie wirklich das Kennwort zurücksetzen? Do you realy wanna reset the password?",4,"Password Reset")
+
+If intanswer = vbYes Then
+	PWGenNew
+	'Set fso = CreateObject("Scripting.FileSystemObject")
+	'sText = fso.OpenTextFile("\\YOUR_AD_SERVER\computacenter$\1-Info\PasswordList.txt", 1).ReadAll
+
+
+
+
+
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:12px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:14px;color:#1E356D'><b>Password Reset for the User " & oUser.Value & " am " & Date() & " um " & Time() & " :</b></td></tr>"
+	strHTML = strHTML & "<tr><td valign=top>Sehr geehrte Damen und Herren,<br>das Passwort für den UserAccount <b> " & oUser.Value & "</b> wurde zurückgesetzt.<br><br>Das neue Initialkennwort lautet :<b><font color=red>" & passlist & "</font></b><br><br>Mit freundlichen Grüßen<br><br>Service Desk Germany"
+      'Set objUser = GetObject("LDAP://" & Split(LCase(DataArea.InnerHTML), "<br>")(0))
+      'msgbox passlist
+      'Set objUser = GetObject ("LDAP://YOUR_AD_SERVER/" & strCNU)
+      '		objUser.SetPassword passlist
+      '		objUser.Put "pwdLastSet", 0
+      '		objUser.SetInfo
+    strHTML = strHTML & "</td></tr></table></td></tr></table>"
+	DataArea.InnerHTML = strHTML
+
+
+Else
+
+
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:12px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:14px;color:red'><b>Password Reset for the User " & oUser.Value & " wurde am " & Date() & " um " & Time() & " abgebrochen! Es wurde kein Passwort zurückgesetzt!</b></td></tr>"
+    strHTML = strHTML & "</table>"
+	DataArea.InnerHTML = strHTML
+End IF
+
+End Sub
+
+
+
+'Unlock AD UserAccount NEW
+Sub Account_unlock_NEW
+On Error Resume Next
+GetUserOu1
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:10px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td style='font-family:verdana;font-size:12px;color:#1E356D'><b>Active Directory User Account locked Status (World Wide):</b></td></tr>"
+	strHTML = strHTML & "<tr><td valign=top>"
+	strHTML = strHTML & "<table style='font-family:verdana;font-size:11px;color:#1E356D'>"
+	strHTML = strHTML & "<tr><td valign=top bgcolor=#C2C2C2>Domain Controller</td><td width=40 align=center> - </td><td bgcolor=#C2C2C2>Locked Status? JA/NEIN</td></tr>"
+
+		Set objOU = GetObject("LDAP://ou=Domain Controllers, dc=YOUR_DOMAIN, dc=net")
+			objOU.Filter = Array("Computer")
+			For Each objComputer in objOU
+					Set objUser = GetObject ("LDAP://" & objComputer.CN & "/" & strCNU)
+						strHTML = strHTML & "<tr><td valign=top>" & objComputer.CN & "</td><td width=40 align=center> - </td>"
+      					objUser.isAccountLocked = False
+      					objUser.SetInfo
+      					strHTML = strHTML & "<td align=center><font color=green>unlocked</td>"
+      					strHTML = strHTML & "</tr>"
+		    Next
+
+    strHTML = strHTML & "</table></td></tr></table>"
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+
+
+
+
+Function Get_LDAP_User_Properties(strObjectType, strSearchField, strObjectToGet, strCommaDelimProps)
+
+      ' This is a custom function that connects to the Active Directory, and returns the specific
+      ' Active Directory attribute value, of a specific Object.
+      ' strObjectType: usually "User" or "Computer"
+      ' strSearchField: the field by which to seach the AD by. This acts like an SQL Query's WHERE clause.
+      '                        It filters the results by the value of strObjectToGet
+      ' strObjectToGet: the value by which the results are filtered by, according the strSearchField.
+      '                        For example, if you are searching based on the user account name, strSearchField
+      '                        would be "samAccountName", and strObjectToGet would be that speicific account name,
+      '                        such as "jsmith".  This equates to "WHERE 'samAccountName' = 'jsmith'"
+      '      strCommaDelimProps: the field from the object to actually return.  For example, if you wanted
+      '                        the home folder path, as defined by the AD, for a specific user, this would be
+      '                        "homeDirectory".  If you want to return the ADsPath so that you can bind to that
+      '                        user and get your own parameters from them, then use "ADsPath" as a return string,
+      '                        then bind to the user: Set objUser = GetObject("LDAP://" & strReturnADsPath)
+
+      ' Now we're checking if the user account passed may have a domain already specified,
+      ' in which case we connect to that domain in AD, instead of the default one.
+      If InStr(strObjectToGet, "\") > 0 Then
+            arrGroupBits = Split(strObjectToGet, "\")
+            strDC = arrGroupBits(0)
+            strDNSDomain = strDC & "/" & "DC=" & Replace(Mid(strDC, InStr(strDC, ".") + 1), ".", ",DC=")
+            strObjectToGet = arrGroupBits(1)
+      Else
+      ' Otherwise we just connect to the default domain
+            Set objRootDSE = GetObject("LDAP://RootDSE")
+            strDNSDomain = objRootDSE.Get("defaultNamingContext")
+      End If
+
+      strBase = "<LDAP://" & strDNSDomain & ">"
+      ' Setup ADO objects.
+      Set adoCommand = CreateObject("ADODB.Command")
+      Set adoConnection = CreateObject("ADODB.Connection")
+      adoConnection.Provider = "ADsDSOObject"
+      adoConnection.Open "Active Directory Provider"
+      adoCommand.ActiveConnection = adoConnection
+
+
+      ' Filter on user objects.
+      'strFilter = "(&(objectCategory=person)(objectClass=user))"
+      strFilter = "(&(objectClass=" & strObjectType & ")(" & strSearchField & "=" & strObjectToGet & "))"
+
+      ' Comma delimited list of attribute values to retrieve.
+      strAttributes = strCommaDelimProps
+      arrProperties = Split(strCommaDelimProps, ",")
+
+      ' Construct the LDAP syntax query.
+      strQuery = strBase & ";" & strFilter & ";" & strAttributes & ";subtree"
+      adoCommand.CommandText = strQuery
+      ' Define the maximum records to return
+      adoCommand.Properties("Page Size") = 100
+      adoCommand.Properties("Timeout") = 30
+      adoCommand.Properties("Cache Results") = False
+
+      ' Run the query.
+      Set adoRecordset = adoCommand.Execute
+      ' Enumerate the resulting recordset.
+      strReturnVal = ""
+      Do Until adoRecordset.EOF
+          ' Retrieve values and display.
+          For intCount = LBound(arrProperties) To UBound(arrProperties)
+                If strReturnVal = "" Then
+                      strReturnVal = adoRecordset.Fields(intCount).Value
+                Else
+                      strReturnVal = strReturnVal & VbCrLf & adoRecordset.Fields(intCount).Value
+                End If
+          Next
+          ' Move to the next record in the recordset.
+          adoRecordset.MoveNext
+      Loop
+
+      ' Clean up.
+      adoRecordset.Close
+      adoConnection.Close
+      Get_LDAP_User_Properties = strReturnVal
+
+End Function
+
+
+
+
+
+'User OU finden
+Sub GetUserOu1
+If oUser.Value = "" Then
+msgbox "Bitte Username eintragen !!!! / Please enter Username !!!!",vbExclamation,"Info"
+Else
+	On Error Resume Next
+	Const ADS_SCOPE_SUBTREE = 2
+	Set objConnection = CreateObject("ADODB.Connection")
+	Set objCommand =   CreateObject("ADODB.Command")
+	objConnection.Provider = "ADsDSOObject"
+	objConnection.Open "Active Directory Provider"
+	Set objCommand.ActiveConnection = objConnection
+	objCommand.Properties("Page Size") = 10000
+	objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE
+	objCommand.CommandText = "SELECT distinguishedName FROM 'LDAP://DC=YOUR_DOMAIN,DC=INTRA' WHERE objectCategory='person' " & "AND sAMAccountName='" & oUser.Value & "'"
+	Set objRecordSet = objCommand.Execute
+	objRecordSet.MoveFirst
+	Do Until objRecordSet.EOF
+	   	strCNU = objRecordSet.Fields("distinguishedName").Value
+		DataArea.InnerHTML = strCNU
+		objRecordSet.MoveNext
+	Loop
+End If
+End Sub
+
+
+
+
+'User OU finden
+Sub GetUserOu
+If oUser.Value = "" Then
+GetUser
+Else
+	On Error Resume Next
+	Const ADS_SCOPE_SUBTREE = 2
+	Set objConnection = CreateObject("ADODB.Connection")
+	Set objCommand =   CreateObject("ADODB.Command")
+	objConnection.Provider = "ADsDSOObject"
+	objConnection.Open "Active Directory Provider"
+	Set objCommand.ActiveConnection = objConnection
+	objCommand.Properties("Page Size") = 10000
+	objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE
+	objCommand.CommandText = "SELECT distinguishedName FROM 'LDAP://DC=YOUR_DOMAIN,DC=INTRA' WHERE objectCategory='person' " & "AND sAMAccountName='" & oUser.Value & "'"
+	Set objRecordSet = objCommand.Execute
+	objRecordSet.MoveFirst
+	Do Until objRecordSet.EOF
+	        strCNU = objRecordSet.Fields("distinguishedName").Value
+		DataArea.InnerHTML = strCNU
+		objRecordSet.MoveNext
+	Loop
+End If
+End Sub
+
+'User SID
+Sub GetUserSID
+GetUser
+    strComputer = "."
+    Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+    Set objAccount = objWMIService.Get ("Win32_UserAccount.Name='" & oUser.value & "',Domain='YOUR_DOMAIN'")
+    strSIDU = objAccount.SID
+    strHTML = "<H4>SID des Anwenders</H4><br>"
+    strHTML = strSIDU
+    DataArea.InnerHTML = strHTML
+End Sub
+
+
+'User zeige Gruppen
+Sub GetUserGroups
+GetUser
+    On Error Resume Next
+    If strCNU = "" Then GetUserOu
+    Set objUser = GetObject("LDAP://" & strCNU)
+    strHTML = "<table border='1' style='font-family:verdana;font-size:12px;font-weight:normal;color:#1E356D;border-collapse: collapse' "  & "bordercolor='#111111' width='50%' id='Table1' >"
+    For Each strGroup In objUser.memberOf
+        Set objGroup = GetObject("LDAP://" & strGroup)
+        strHTML = strHTML & "<tr><td>" & objGroup.CN & "</td></tr>"
+    Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+End Sub
+
+
+
+
+
+'Gruppen OU finden
+Sub GetGroupOu
+If oGroups.Value = "" Then
+msgbox "Bitte Gruppe eintragen !!!! / Please enter Group !!!!",vbExclamation,"Info"
+Else
+	On Error Resume Next
+	Const ADS_SCOPE_SUBTREE = 2
+	Set objConnection = CreateObject("ADODB.Connection")
+	Set objCommand =   CreateObject("ADODB.Command")
+	objConnection.Provider = "ADsDSOObject"
+	objConnection.Open "Active Directory Provider"
+	Set objCommand.ActiveConnection = objConnection
+	objCommand.Properties("Page Size") = 10000
+	objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE
+	objCommand.CommandText = "SELECT distinguishedName FROM 'LDAP://DC=YOUR_DOMAIN,DC=INTRA' WHERE objectCategory='Group' " & "AND sAMAccountName='" & oGroups.Value & "'"
+	Set objRecordSet = objCommand.Execute
+	objRecordSet.MoveFirst
+	Do Until objRecordSet.EOF
+	        strCNU = objRecordSet.Fields("distinguishedName").Value
+		DataArea.InnerHTML = strCNU
+		objRecordSet.MoveNext
+	Loop
+End If
+End Sub
+
+
+'Alle Mitglieder einer gruppe zeigen
+Sub GetGroupmembers
+GetGroupOu
+On Error Resume Next
+
+Set objGroup = GetObject("LDAP://" & strCNU)
+objGroup.GetInfo
+arrMemberOf = objGroup.GetEx("member")
+
+    strHTML = "<table border='1' style='font-family:verdana;font-size:12px;font-weight:normal;color:#1E356D;border-collapse: collapse' "  & "bordercolor='#111111' width='50%' id='Table1' >"
+    For Each strMember In arrMemberOf
+	Set objUser = GetObject("LDAP://" & strMember)
+        strHTML = strHTML & "<tr><td>" & objUser.CN & "</td></tr>"
+    Next
+    strHTML = strHTML & "</table>"
+    DataArea.InnerHTML = strHTML
+
+End Sub
+
+
+
+
+
+'User zeige Drucker
+Sub GetUserPrinters
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+strKeyPath = "Software\Microsoft\Windows NT\CurrentVersion\PrinterPorts"
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+objReg.EnumValues HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+For i=0 To UBound(strEntryName)
+   strHTML = strHTML & strEntryName(i) &"<br>"
+Next
+DataArea.InnerHTML = strHTML
+End Sub
+
+
+'User zeige Standarddrucker
+Sub GetUserDefaultPrinter
+GetUser
+GetUserSID
+strSID = ""&strSIDU&""
+strKeyPath = "Software\Microsoft\Windows NT\CurrentVersion\Windows"
+strEntryName = "Device"
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & oComputer.value & "\root\default:StdRegProv")
+objReg.GetStringValue HKU, strSID&"\"&strKeyPath, strEntryName, strValue
+strHTML = strValue
+DataArea.InnerHTML = strHTML
+End Sub
+Sub netuserdom
+	Set objShell = CreateObject("Wscript.Shell")
+    objShell.Run("%comspec% /k net user " & oUser.value & " /dom")
+End Sub
+Sub remote_assistance
+    If oComputer.value = "" Then Exit Sub
+    Dim EndTime
+    Set objShell = CreateObject("Wscript.Shell")
+		objShell.run "hcp://CN=Microsoft%20Corporation,L=Redmond,S=Washington,C=US/Remote%20Assistance/Escalation/Unsolicited/Unsolicitedrcui.htm"
+		objShell.AppActivate("Help and Support Center")
+    EndTime = DateAdd("s",3,Time())
+    Do While Time() <= EndTime
+    Loop
+	objShell.sendkeys "{TAB 9}"
+	objShell.sendkeys oComputer.value
+    EndTime = DateAdd("s",1,Time())
+    objShell.sendkeys "{TAB 1}"
+    objShell.sendkeys "{ENTER}"
+    objShell.sendkeys "{TAB 2}"
+    objShell.sendkeys "{ENTER}"
+    Do While Time() <= EndTime
+    Loop
+	objShell.sendkeys "%c"
+End Sub
+
+'Bildschirm sperren
+'Sub lock_pc
+'	strComputer = oComputer.Value
+'	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2:Win32_Process")
+'	objWMIService.Create "RunDLL32.EXE user32.dll,LockWorkStation"
+'	DataArea.InnerHTML = "Der Rechner <b>" & oComputer.Value & "</b> wurde gesperrt!"
+'End Sub
+
+' CD/DVD Drive open
+'Sub openCD
+'	Const CDROM = 4
+'	Set objWMIService = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & oComputer.Value & "\root\cimv2")
+'	Set colcdrom = objWMIService.ExecQuery ("Select * from Win32_CDROMDrive")
+'	Set Creator = CreateObject("WMPlayer.OCX.7" )
+'	Set CDROM = Creator.cdromCollection
+'		if CDROM.Count then
+'		For A = 0 to CDROM.Count - 1
+'		CDROM.Item(A).Eject
+'		Next
+'		End if
+'					strHTML = strHTML & "<br><b>CDRom Drives:</b><br>"
+'					For Each objcdrom in colcdrom
+'					strHTML = strHTML & "Drive <b>" & objcdrom.Drive & "</b><br>"
+'    				strHTML = strHTML & "Manufacturer: " & objcdrom.Manufacturer & "<br>"
+'    				strHTML = strHTML & "Media Loaded: " & objcdrom.MediaLoaded & "<br>"
+'    				strHTML = strHTML & "Media Type: " & objcdrom.MediaType & "<br>"
+'    				strHTML = strHTML & "Name: " & objcdrom.Name & "<br>"
+'End Sub
+
+
+
+'Sub RefreshTime 
+'Triggers screen updates in an HTA...  
+'With CreateObject("WScript.Shell")  
+'.run "%comspec% /c echo something & exit", 0, true  
+'End With  
+'End Sub 
+
+</script>
+
+<body bgcolor="#ffffff" topmargin="2" marginheight="2" leftmargin="2" rightmargin="2" bottommargin="2">
+<table bgcolor="#EAEEF5" height="100%" border="0" width="100%" cellspacing="0" cellpadding="2" style="border-width:1px;border-color:#ADA6AD;border-style:solid">
+   <tr>
+     <td valign="top" align="center">
+     	<table border="0" width="100%">
+     	 <tr>
+     	  <td width="30%"><span style="font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B" id="span_manager"></span>
+     	  <br><input type="button" style="WIDTH:220px;HEIGHT:50px" value="Zurücksetzen" name="run_button" accesskey="r" onClick="Refresh" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"></td>
+     	  <td width="40%" valign="top" >
+     	  	<table width="100%" border="0" cellspacing="0" cellpadding="2">
+	     	    <tr>
+		     	     <td colspan="2" align="center" style="font-family:verdana;font-size:16px;font-weight:bold;color:#6699FF"></td>
+	     	    </tr>
+	        </table>
+     	  </td>
+     	 </tr>
+     	 <tr>
+		  <td  style="font-family:arial;font-size:13px;font-weight:bold;color:#1B2D5B">&nbsp;</td>
+		  
+		  
+		  <td align="left" style="font-family:arial;font-size:20px;font-weight:bold;color:#1B2D5B"><script language="VBScript">document.write Date()</script></td>
+     	 </tr>
+     	</table>
+     </td>
+   </tr>
+   <tr valign="top" align="center">
+     <td valign="top" align="center">
+     	<table border="0" cellpadding="0" cellspacing="2" width="100%" style="border-width:0px;border-color:#6699FF;border-style:solid">
+     	 <tr>
+    	  <td width="10%" valign="top" height="300">
+     	  	<table width="100%" border="0" cellpadding="3" cellspacing="0" width="100%">
+			  <tr>
+     	  <td width="210" valign="top" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid;border-top-style:solid">
+     	  <table width="210" border="0" cellpadding="3" cellspacing="0" >
+			  <tr height="25" style="font-family:verdana;font-size:14px;font-weight:bold;color:#E3DBD8">
+                  <td bgcolor="#6699FF" align="center" ><img src="data\pic\pic-pc.jpg" border="0">
+			   </td>
+			 </tr>
+			<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input name="oComputer" style="WIDTH: 150px" accesskey="ENTER" onEnter="GetUser1">&nbsp;<input type="button" style="WIDTH: 40px" value =">>>" name="run_button" accesskey="ENTER" onClick="GetUser1"></td>
+             </tr>
+             <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center">
+			   <span id = "PCAvailable"></span>
+			   </td>
+             </tr>
+          </table>
+     	  </td>
+     	  </tr>
+     	   <tr><td height="10"></td></tr>
+			  <tr height="25" style="font-family:verdana;font-size:14px;font-weight:bold;color:#0F1A34">
+                  <td bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#0F1A34;border-left-style:solid;border-right-style:solid">Remote Aufschaltung
+			   </td>
+			 </tr>
+          <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+          	<td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid">
+          		<table>
+          		<tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><button name="run_button" style="WIDTH: 60px;HEIGHT: 60px" accesskey="a" onClick="AufschaltSub" style="border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#6699FF"><img src="data\pic\icons-ra.jpg" border="0"></button></td>
+            	<td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><button name="run_button" style="WIDTH: 60px;HEIGHT: 60px" accesskey="a" onClick="RDPConn" style="border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#6699FF"><img src="data\pic\icons-rdp.jpg" border="0"></button></td>
+             	</tr>
+             	</table>
+            </td>
+             </tr>
+             </tr>
+             <tr><td height="10"></td></tr>
+			  <tr height="25" style="font-family:verdana;font-size:14px;font-weight:bold;color:#0F1A34">
+                  <td bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid">Rechner Informationen
+			   </td>
+			 </tr>
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+		     <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid">
+		     	<table>
+		     	<tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center" colspan=3><input type="button" name="run_button" style="WIDTH: 200px" value ="PC Info" onClick="GetPCInfo" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value="Computer-OU" onClick="GetComputerOU" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 95px" value ="LAN Karte" onClick="GetLANSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value="Ping" onClick="PingSub2" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 95px" value="Tracert" onClick="TracertSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value="Ping Adv." onClick="PingSub1" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 95px" value="Nslookup" onClick="NslookupSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value="Verwaltung" onClick="CompMgmtSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 95px" value="Services" onClick="PCServiceSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value="Software" onClick="GetSoftware" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="width=95px" value="Computer GPO" onClick="GetComputerPolicy" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value ="c$ Freigabe" onClick="ExplorerSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 95px" value="Up-Time" onClick="GetUpTime" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr>
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 95px" value ="Proxy lesen" onClick="GetProxy" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   <td nowrap width="3"></td>
+			   <td nowrap bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 95px" value ="Proxy setzen" onClick="SetProxy" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+			   </tr>
+			   <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap colspan=3 bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 200px" value ="Proxy ausschalten" accesskey="p" onClick="SetProxydisable" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+             </tr>
+			   <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap colspan=3 bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 200px" value ="Psexec CMD" accesskey="p" onClick="PsexecCmdSub" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+             </tr>
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap colspan=3 bgcolor="#EFEFEF" align="center" ><input type="button" name="run_button" style="WIDTH: 200px" value ="Umgebungsvariablen" accesskey="p" onClick="RemoteSet" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"></td>
+             </tr>
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap colspan=3 bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value ="User Drucker" onClick="GetUserPrinter" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"> </td>
+             </tr>
+             <!--<tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap colspan=3 bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value ="Lock Workstation" onClick="lock_pc" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"> </td>
+             </tr>-->
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap colspan=3 bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value ="Open Files / geöff. Dateien" onClick="OpenFilesSub" style="background:#6699FF;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34"> </td>
+             </tr>
+			   </table>
+			</td>
+             </tr>
+             <tr><td height="10"></td></tr>
+			<tr height="20" style="font-family:verdana;font-size:14px;font-weight:bold;color:#0F1A34">
+			   <td nowrap bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid">Zusatz Tools</td>
+             </tr>
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+		     <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid">
+		     	<table>
+			<tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value="OORegEdtor" onClick="RegeditSub" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"></td>
+             </tr>
+			<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#0F1A34">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value="FreeCommander" onClick="ToolstartFreeCommander" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+			 
+			   <td nowrap width="3"></td>
+             <tr>
+             <td>
+             <table>
+            </table>
+			   </td>
+			   </tr>
+             </table>
+             </td>
+             </tr>
+     	    </table>
+     	  </td>
+     	  <td width="90%" align="center" valign="top">
+     	  	<table width="100%" height="200" border="0" cellpadding="4" cellspacing="0"  style="font-family:verdana;font-size:12px;font-weight:normal;color:#1E356D">
+				<tr height="25">
+					<td align=left valign=top style=border-width:1px;border-color:#6699FF;border-style:solid>
+            			<span id = "DataAreaUser"><b>User Info:</b></span>
+		   			</td>
+				</tr>
+     	  	</table>
+     	  	<br>
+			<table width="100%" height="635" border="0" cellpadding="4" cellspacing="0"  style="font-family:verdana;font-size:12px;font-weight:normal;color:#1E356D">
+				<tr height="25">
+					<td bgcolor="#F9FCFF" align="left" valign="top" style="border-width:1px;border-color:#6699FF;border-style:solid">
+						<span id = "DataArea">Informationsbereich:</span>
+					</td>
+		  		</tr>
+     	  	</table>
+		   	<br>
+     	  </td>
+     	  <td width="10%" valign="top" height="300">
+     	  	<table width="100%" border="0" cellpadding="3" cellspacing="0" width="100%">
+			  <tr height="25" style="font-family:verdana;font-size:14px;font-weight:bold;color:#E3DBD8">
+                  <td bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid"><img src="data\pic\pic-user.jpg" border="0">
+			   </td>
+			 </tr>
+			<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid"><input name="oUser" style="WIDTH: 150px" style="font-family:verdana;font-size:14px;font-weight:bold;color:#1E356D" on Enter="GetUserInfo1"><input type="button" style="WIDTH: 40px" value =">>>" name="run_button" accesskey="ENTER" onClick="GetUserInfo1"></td>
+             </tr>
+			<tr><td height="10"></td></tr>
+             <tr height="20" style="font-family:verdana;font-size:14px;font-weight:bold;color:#1B2D5B">
+			   <td nowrap bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid">Benutzer Informationen</td>
+             </tr>
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#000000">
+		     <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid">
+		     	<table>
+            <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" style="WIDTH: 200px" value ="Account Management" name="run_button" accesskey="u" onClick="AccountManagement" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+            <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#1B2D5B">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" style="WIDTH: 200px" value ="User Infos" name="run_button" accesskey="u" onClick="GetUserInfo1" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+             <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value ="LOOKOUT Status" onClick="Account_Status" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+             <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value ="LOOKOUT Status WW TEST" onClick="Account_Status_NEW" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+             <tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value ="Unlock Account WW Test" onClick="Account_unlock_NEW" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value="User-OU" onClick="GetUserOu" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value="Gruppen" onClick="GetUserGroups" onClick="GetUserOu" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value="net user /dom" onClick="netuserdom" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"> </td>
+             </tr>
+             <tr><td height="10"></td></tr>
+             <tr height="20" style="font-family:verdana;font-size:14px;font-weight:bold;color:#1B2D5B">
+			   <td nowrap bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid">Gruppen Info</td>
+             </tr>
+			<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:0px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid"><input name="oGroups" style="WIDTH: 150px" style="font-family:verdana;font-size:14px;font-weight:bold;color:#6699FF"><input type="button" style="WIDTH: 40px" value =">>>" name="run_button" accesskey="u" onClick="GetGroupmembers"></td>
+             </tr>
+             </table>
+             </td>
+             </tr>
+<tr><td height="10"></td></tr>
+             <tr height="25" style="font-family:verdana;font-size:14px;font-weight:bold;color:#E3DBD8">
+                  <td bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid"><img src="data\pic\pic-printer.jpg" border="0">
+			   </td>
+			 </tr>
+			<tr height="20" style="font-family:arial;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid"><input name="oPrinter" style="WIDTH: 150px" style="font-family:verdana;font-size:14px;font-weight:bold;color:#6699FF"><input type="button" style="WIDTH: 40px" value =">>>" name="run_button" accesskey="u" onClick="OnlinePrinter1"></td>
+             </tr>
+             <tr><td height="10"></td></tr>
+			<tr height="20" style="font-family:verdana;font-size:14px;font-weight:bold;color:#1B2D5B">
+			   <td nowrap bgcolor="#6699FF" align="center" style="border-width:1px;border-color:#1B2D5B;border-left-style:solid;border-right-style:solid">Drucker Test</td>
+             </tr>
+             <tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#000000">
+		     <td nowrap bgcolor="#EFEFEF" align="center" style="border-width:1px;border-color:#6699FF;border-left-style:solid;border-right-style:solid;border-bottom-style:solid">
+		     	<table>
+			<tr height="20" style="font-family:verdana;font-size:12px;font-weight:bold;color:#000000">
+			   <td nowrap bgcolor="#EFEFEF" align="center"><input type="button" name="run_button" style="WIDTH: 200px" value="DruckerTest" onClick="DruckerTest" style="background:#B7D6EE;border-width:1px;border-color:#6699FF;border-style:solid;font-family:verdana;font-size:12px;font-weight:bold;color:#1B2D5B"></td>
+             </tr>
+             </table>
+             </td>
+             </tr>
+     	    </table>
+     	  </td>
+     	 </tr>
+     	</table>
+     </td>
+    </tr>
+	<td width="40%" align="center" style="font-family:arial;font-size:10px;font-weight:bold;color:#1B2D5B"><a>Oclaton</a></td>
+ </table>
+ </body>
+</html>
